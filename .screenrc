@@ -1,3 +1,4 @@
+#Thanks to Pato Lankenau for this configuration script
 startup_message off
 vbell off
 autodetach on
