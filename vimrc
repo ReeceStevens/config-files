@@ -28,5 +28,4 @@ set backspace=2
 let g:Powerline_symbols = 'fancy'
 
 set guifont=Droid\ Sans\ Mono\ for\ Powerline
-"set font=Droid\ Sans\ Mono\ for\ Powerline
 
