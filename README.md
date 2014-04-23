@@ -1,4 +1,4 @@
 config-files
 ============
-These files are my configuration files for Ubuntu
-and the various programs I use on it.
+These are my configuration files for Arch/Ubuntu/MacOSX. 
+This includes .screenrc, .vimrc, and rc.lua (for the Awesome window manager).
