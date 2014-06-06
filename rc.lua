@@ -53,6 +53,8 @@ run_once("unclutter")
 run_once("compton")
 run_once("xrdb -merge ~/.Xresources")
 run_once("redshift -l 30:-90 -t 5500:3500")
+run_once("xautolock -time 5 -locker lock")
+run_once("~/.dropbox-dist/dropboxd")
 -- }}}
 
 -- {{{ Variable definitions
@@ -70,11 +72,11 @@ editor     = "vim " or os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
 
 -- user defined
-browser    = "dwb"
+browser    = "chromium"
 browser2   = "iron"
 gui_editor = "gvim"
 graphics   = "gimp"
-musiplr   = terminal .. " -e ncmpcpp "
+musicplr   = terminal .. " -e ncmpc "
 
 local layouts = {
     awful.layout.suit.floating,
@@ -87,8 +89,8 @@ local layouts = {
 
 -- {{{ Tags
 tags = {
-   names = { " WEB ", " TERMINAL ", " FILES ", " OTHER " },
-   layout = { layouts[1], layouts[3], layouts[2], layouts[4] }
+   names = { " TERMINAL ", " WEB ", " SCHOOL ", " FILES ", " DEVELOPMENT ", " OTHER " },
+   layout = { layouts[3], layouts[1], layouts[4], layouts[2], layouts[4], layouts[1] }
 }
 for s = 1, screen.count() do
    tags[s] = awful.tag(tags.names, s, tags.layout)
@@ -204,23 +206,23 @@ mpd_icon:buttons(awful.util.table.join(awful.button({ }, 1,
 function () awful.util.spawn_with_shell(musicplr) end)))
 prev_icon:buttons(awful.util.table.join(awful.button({}, 1,
 function ()
-    awful.util.spawn_with_shell("mpc prev || ncmpcpp prev || ncmpc prev || pms prev")
+    awful.util.spawn_with_shell("mpc prev")
     mpdwidget.update()
 end)))
 next_icon:buttons(awful.util.table.join(awful.button({}, 1,
 function ()
-    awful.util.spawn_with_shell("mpc next || ncmpcpp next || ncmpc next || pms next")
+    awful.util.spawn_with_shell("mpc next")
     mpdwidget.update()
 end)))
 stop_icon:buttons(awful.util.table.join(awful.button({}, 1,
 function ()
     play_pause_icon:set_image(beautiful.play)
-    awful.util.spawn_with_shell("mpc stop || ncmpcpp stop || ncmpc stop || pms stop")
+    awful.util.spawn_with_shell("mpc stop")
     mpdwidget.update()
 end)))
 play_pause_icon:buttons(awful.util.table.join(awful.button({}, 1,
 function ()
-    awful.util.spawn_with_shell("mpc toggle || ncmpcpp toggle || ncmpc toggle || pms toggle")
+    awful.util.spawn_with_shell("mpc toggle")
     mpdwidget.update()
 end)))
 
@@ -376,7 +378,7 @@ for s = 1, screen.count() do
                            awful.button({ }, 5, function () awful.layout.inc(layouts, -1) end)))
     -- Create a taglist widget
     mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, mytaglist.buttons)
-
+	--mytaglist[s]:set_bg("#111111")
     -- Create a tasklist widget
     mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
 
@@ -397,13 +399,18 @@ for s = 1, screen.count() do
     --right_layout:add(mailwidget)
     right_layout:add(batwidget)
     right_layout:add(spr_right)
+
+	right_layout:add(mpd_icon)
+    right_layout:add(musicwidget)
+    right_layout:add(bar)
+ 
     right_layout:add(prev_icon)
     right_layout:add(next_icon)
     right_layout:add(stop_icon)
     right_layout:add(play_pause_icon)
-    right_layout:add(bar)
-    right_layout:add(mpd_icon)
-    right_layout:add(musicwidget)
+    --right_layout:add(bar)
+    --right_layout:add(mpd_icon)
+    --right_layout:add(musicwidget)
     right_layout:add(bar)
     right_layout:add(spr_very_small)
     right_layout:add(volumewidget)
@@ -448,7 +455,8 @@ for s = 1, screen.count() do
     mybottomwibox[s]:set_widget(bottom_layout)
 
     -- Set proper backgrounds, instead of beautiful.bg_normal
-    mywibox[s]:set_bg(beautiful.topbar_path .. screen[mouse.screen].workarea.width .. ".png")
+--    mywibox[s]:set_bg(beautiful.topbar_path .. screen[mouse.screen].workarea.width .. ".png")
+    mywibox[s]:set_bg("#242424")
     mybottomwibox[s]:set_bg("#242424")
 
     -- Create a borderbox above the bottomwibox
