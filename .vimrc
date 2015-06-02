@@ -32,6 +32,7 @@ command Latex execute "silent C!pdflatex % > /dev/null && open %:r.pdf > /dev/nu
 colo molokai
 set tabstop=4
 set number
+set rnu
 set backspace=2
 syntax on
 set mouse=a
