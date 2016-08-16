@@ -1,10 +1,4 @@
-" vim config TODO
-" 1. Get virtualenv support working
-" 2. Automatic switching between python2 and python3 semantic completion?
-"	(may be taken care of if issue #1 is fixed)
-
 " Typing preferences and asthetics
-colo molokai
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
@@ -15,8 +9,9 @@ syntax on
 set mouse=a
 set background=dark
 set scrolloff=5
-set noexpandtab
+set expandtab
 set cursorline
+set list
 let mapleader=","
 
 " YCM preferences
@@ -33,65 +28,49 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
 call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
-
-" Extend Vim's default scripts
-Plugin 'L9'
-
-" Enable fuzzy searching
-Plugin 'FuzzyFinder'
-
-" The all-powerful completion engine
-Plugin 'Valloric/YouCompleteMe'
-let g:ycm_autoclose_preview_window_after_completion=1
-map <leader>d :YcmCompleter GoToDefinitionElseDeclaration<CR>
-
-" Double-leader for suggested jumps instead of numbers
-Plugin 'haya14busa/vim-easymotion'
-
-" The all-powerful git plugin
-Plugin 'tpope/vim-fugitive'
-
-" Statusline
-Plugin 'vim-airline/vim-airline'
-let g:airline#extensions#virtualenv#enabled = 1
-let g:airline#extensions#whitespace#enabled = 0
-
+Plugin 'L9'                         " Extend Vim's default scripts
+Plugin 'ctrlpvim/ctrlp.vim'         " Enable fuzzy searching
+Plugin 'flazz/vim-colorschemes'     " Enable more colorschemes by default
+Plugin 'Valloric/YouCompleteMe'     " The all-powerful completion engine
+    let g:ycm_autoclose_preview_window_after_completion=1
+    map <leader>d :YcmCompleter GoToDefinitionElseDeclaration<CR>
+Plugin 'scrooloose/syntastic' "Handle syntax support and PEP8 compliance
+    let g:syntastic_stl_format = '[%E{Err: %e}%B{, }%W{Warn: %w}]'
+    let g:syntastic_typescript_tsc_fname = ''
+Plugin 'haya14busa/vim-easymotion'  " Double-leader for suggested jumps instead of numbers
+Plugin 'tpope/vim-fugitive'         " The all-powerful git plugin
+Plugin 'vim-airline/vim-airline'    " Statusline
+    let g:airline#extensions#virtualenv#enabled = 1
+    let g:airline#extensions#whitespace#enabled = 0
 Plugin 'tpope/vim-commentary'
-Plugin 'leafgarland/typescript-vim'
-
-" Handle virtualenv gracefully
-Plugin 'jmcantrell/vim-virtualenv'
-let g:virtualenv_directory = '/Users/reecestevens/innolitics/dicom-standard-browser/'
-
-"Handle syntax support and PEP8 compliance
-Plugin 'scrooloose/syntastic'
-let g:syntastic_stl_format = '[%E{Err: %e}%B{, }%W{Warn: %w}]'
+Plugin 'leafgarland/typescript-vim' " TypeScript syntax highlighting
+    if !exists("g:ycm_semantic_triggers")
+      let g:ycm_semantic_triggers = {}
+    endif
+    let g:ycm_semantic_triggers['typescript'] = ['.']
+Plugin 'jmcantrell/vim-virtualenv'  " Handle virtualenv gracefully
+    let g:virtualenv_directory = '/Users/reecestevens/innolitics/dicom-standard-browser/'
 Plugin 'nvie/vim-flake8'
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_javascript_checkers = ['eslint']
-
-" Show the current working directory in a nice tree
-Plugin 'scrooloose/nerdtree'
-noremap <silent> <leader>1 :NERDTreeToggle<CR>
-let NERDTreeIgnore = ['\~$', '\.pyc', '__pycache__']
-let NERDTreeMapHelp = '<f1>'
-
-" Show the ctags in a file
-Plugin 'majutsushi/tagbar.git'
-let g:tagbar_iconchars = ['+', '-']
-noremap <silent> <leader>2 :TagbarToggle<CR>
-
-" View the current buffers
-Plugin 'corntrace/bufexplorer'
-noremap <silent> <leader>3 :BufExplorer<CR>
-let g:bufExplorerDefaultHelp=0
-
-" View the undo/redo tree in a graphical format
-Plugin 'sjl/gundo.vim.git'
-nnoremap <silent> <leader>4 :GundoToggle<CR>
-let g:gundo_right = 1
-let g:gundo_help  = 0
+    let g:syntastic_check_on_open = 1
+    let g:syntastic_check_on_wq = 0
+    let g:syntastic_javascript_checkers = ['eslint']
+Plugin 'scrooloose/nerdtree' " Show the current working directory in a nice tree
+    noremap <silent> <leader>1 :NERDTreeToggle<CR>
+    let NERDTreeIgnore = ['\~$', '\.pyc', '__pycache__']
+    let NERDTreeMapHelp = '<f1>'
+Plugin 'majutsushi/tagbar.git' " Show the ctags in a file
+    let g:tagbar_iconchars = ['+', '-']
+    noremap <silent> <leader>2 :TagbarToggle<CR>
+Plugin 'corntrace/bufexplorer' " View the current buffers
+    noremap <silent> <leader>3 :BufExplorer<CR>
+    let g:bufExplorerDefaultHelp=0
+Plugin 'sjl/gundo.vim.git' " View the undo/redo tree in a graphical format
+    nnoremap <silent> <leader>4 :GundoToggle<CR>
+    let g:gundo_right = 1
+    let g:gundo_help  = 0
+Plugin 'mxw/vim-jsx' " JSX Syntax Highlighting
+    let g:jsx_ext_required = 0
+Plugin 'moll/vim-node' " Node.js Tools
 
 call vundle#end()
 filetype plugin indent on
@@ -136,8 +115,11 @@ au FileType gitcommit setlocal tw=72
 autocmd FileType *.py set expandtab
 autocmd Filetype *.py setlocal tw=79 "" For PEP8 compliance
 
+autocmd Filetype *.js set expandtab
+autocmd BufNewFile,BufFilePre,BufRead *.tsx set filetype=typescript
+
 " Compile and run python files by pressing <F9>
-nnoremap <buffer> <F9> :exec '!python' shellescape(@%, 1)<cr>
+nnoremap <buffer> <F9> :exec '!python3' shellescape(@%, 1)<cr>
 
 "" Markdown Options
 autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
@@ -150,6 +132,8 @@ autocmd BufNewFile,BufRead,BufFilePre *.tex set spell
 autocmd FileType *.tex setlocal nocursorline
 " Compile Latex documents (Mac version, opens in Preview)
 command Latex execute "silent !pdflatex % > /dev/null && open %:r.pdf > /dev/null 2>&1 &" | redraw!
+
+colo Tomorrow-Night
 
 " TODO: Is there a bettery way of detecting virtualenv besides
 " running this python script with the call to execfile?
