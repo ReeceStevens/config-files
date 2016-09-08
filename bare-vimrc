@@ -1,0 +1,70 @@
+" Typing preferences and asthetics
+colo slate
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set number
+set rnu
+set backspace=2
+syntax on
+set mouse=a
+set background=dark
+set scrolloff=5
+set noexpandtab
+set cursorline
+let mapleader=","
+
+set laststatus=2
+set encoding=utf-8
+let g:airline_powerline_fonts = 1
+
+filetype plugin indent on
+
+" Switch colon and semicolon
+nnoremap ; :
+vnoremap ; :
+nnoremap : ;
+vnoremap : ;
+
+" Move around long lines as break lines
+nnoremap j gj
+nnoremap k gk
+
+" Remap ESC to jk in quick succession
+inoremap jk <ESC>
+inoremap kj <ESC>
+inoremap <ESC> <nop>
+
+" For finger fumbling (thanks pato)
+command! W w
+command! Wq wq
+command! WQ wq
+command! Q q
+command! Wa wa
+command! WA wa
+
+" Turn relative number on when scrolling
+" and off while typing
+autocmd InsertEnter * :set rnu!
+autocmd InsertLeave * :set rnu
+
+"" Filetype Specific Settings
+
+"" GITCOMMIT Options
+au FileType gitcommit setlocal tw=72
+
+"" Python Options
+autocmd FileType *.py set expandtab
+autocmd Filetype *.py setlocal tw=79 "" For PEP8 compliance
+
+"" Markdown Options
+autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
+
+au BufNewFile,BufFilePre,BufRead Jenkinsfile set filetype=groovy
+
+"" Latex Options
+autocmd BufNewFile,BufRead,BufFilePre *.tex set spell
+" Fix constant redraw issue on Latex files
+autocmd FileType *.tex setlocal nocursorline
+" Compile Latex documents (Mac version, opens in Preview)
+command Latex execute "silent !pdflatex % > /dev/null && open %:r.pdf > /dev/null 2>&1 &" | redraw!
