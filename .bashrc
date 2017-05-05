@@ -32,12 +32,25 @@ alias gp='git push'
 alias gb='git branch'
 alias gch='git checkout'
 
+# Autocomplete
+source ~/.config/bash/autocomplete/git_autocomplete.bash
+
+if hash __git_complete 2>/dev/null; then
+    __git_complete gc _git_commit
+    __git_complete ga _git_add
+    __git_complete gb _git_branch
+    __git_complete gm _git_merge
+    __git_complete gd _git_diff
+    __git_complete gch _git_checkout
+    __git_complete gcp _git_cherry_pick
+fi
 
 export EDITOR="nvim"
 export PATH=$PATH:"/home/reece/programs/MATLAB/bin"
 export PATH=$PATH:"/home/reece/bin"
 export PATH=$PATH:"/home/reece/.local/bin"
 export RUST_SRC_PATH=~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src
+# export PYTHONPATH=$PYTHONPATH:"/usr/lib/python3.6/"
 
 # Substitution script
 function sub (){(ag -l $1 | xargs sed -i'' "s/$1/$2/g")}
