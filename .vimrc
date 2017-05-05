@@ -134,6 +134,19 @@ Plugin 'neomake/neomake'
     let g:neomake_java_enabled_makers = []
     let g:neomake_stl_format = '[%E{Err: %e}%B{, }%W{Warn: %w}]'
 
+     " let g:neomake_error_sign = {'text': 'E>', 'texthl': 'NeomakeErrorSign'}
+     let g:neomake_error_sign = {'text': 'E>', 'texthl': 'NeomakeMessageSign'}
+     let g:neomake_warning_sign = {
+         \   'text': 'W>',
+         \   'texthl': 'NeomakeWarningSign',
+         \ }
+     let g:neomake_message_sign = {
+          \   'text': 'M>',
+          \   'texthl': 'NeomakeMessageSign',
+          \ }
+     let g:neomake_info_sign = {'text': 'I>', 'texthl': 'NeomakeInfoSign'}
+     let g:neomake_highlight_columns = 5
+
 
 "" Filetype Specific Support
 Plugin 'rust-lang/rust.vim'
@@ -169,7 +182,7 @@ let g:EclimCompletionMethod = 'omnifunc'
 
 function! LatexOptions()
     setlocal spell
-    command Latex execute "silent !pdflatex % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
+    command! Latex execute "silent !pdflatex % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
     nnoremap <F2> :Latex<CR>
 endfunction
 
@@ -180,8 +193,10 @@ function! MarkdownOptions()
     syn match math '\$[^$].\{-}\$'
     hi link math Statement
     let g:markdown_fenced_languages = ["c","python","html","matlab","java"]
-    command Pandoc execute "silent !pandoc --to=Latex --out=%:r.pdf % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
+    command! Pandoc execute "silent !pandoc --to=Latex --out=%:r.pdf % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
+    command! PandocSlides execute "silent !pandoc --to=beamer --out=%:r.pdf % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
     nnoremap <F2> :Pandoc<CR>
+    nnoremap <F3> :PandocSlides<CR>
 endfunction
 
 
