@@ -1,0 +1,8 @@
+xterm*loginshell: true
+!xterm*faceName: fixed
+xterm*faceName: anything 
+xterm*faceSize: 9
+Xft.dpi: 160.0
+xterm*foreground: rgb:a8/a8/a8
+xterm*background: rgb:00/00/00
+xterm*selectToClipboard: true
