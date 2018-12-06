@@ -16,6 +16,7 @@ set list
 set clipboard+=unnamedplus " neovim clipboard setting
 set diffopt=vertical       " Open vimdiffs in vertical splits
 let mapleader=","
+set tags+=.git/tags
 
 set laststatus=2
 set encoding=utf-8
@@ -43,6 +44,17 @@ command! Wa wa
 command! WA wa
 
 nnoremap <leader>c :terminal<CR>
+nnoremap <leader>z :tabe %<CR>
+
+" Easier terminal exit
+tnoremap <C-w>h <C-\><C-N><C-w>h
+tnoremap <C-w>j <C-\><C-N><C-w>j
+tnoremap <C-w>k <C-\><C-N><C-w>k
+tnoremap <C-w>l <C-\><C-N><C-w>l
+
+" Easy access to location/quickfix lists
+nnoremap <leader>e :lopen<CR>
+nnoremap <leader>q :copen<CR>
 
 " Turn relative number on when scrolling
 " and off while typing
@@ -57,7 +69,6 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'L9'                         " Extend Vim's default scripts
 Plugin 'tpope/vim-obsession'        " Easier hooks to vim sessions
-
 
 "" File Exploration Plugins
 Plugin 'ctrlpvim/ctrlp.vim'         " Enable fuzzy searching
@@ -75,7 +86,6 @@ Plugin 'tpope/vim-unimpaired'       " Convenient mappings for the quickfix list
 
 
 "" Asthetics
-Plugin 'flazz/vim-colorschemes'     " Enable more colorschemes by default
 Plugin 'vim-airline/vim-airline'    " Statusline
     let g:airline_symbols_ascii = 1
     let g:airline_skip_empty_sections = 1
@@ -90,11 +100,63 @@ Plugin 'vim-airline/vim-airline-themes'
 
 "" File Editing Plugins
 Plugin 'tpope/vim-fugitive'         " The all-powerful git plugin
+    noremap <silent> <leader>5 :Gblame<CR>
+Plugin 'tpope/vim-rhubarb'
+Plugin 'airblade/vim-gitgutter'
+    let g:gitgutter_sign_added = '∙'
+    let g:gitgutter_sign_modified = '∙'
+    let g:gitgutter_sign_removed = '∙'
+    let g:gitgutter_sign_modified_removed = '∙'
 Plugin 'tpope/vim-commentary'
 Plugin 'majutsushi/tagbar.git' " Show the ctags in a file
     let g:tagbar_iconchars = ['+', '-']
     let g:airline#extensions#tagbar#enabled = 0
     noremap <silent> <leader>2 :TagbarToggle<CR>
+    let g:tagbar_type_typescript = {
+      \ 'ctagstype': 'typescript',
+      \ 'kinds': [
+        \ 'c:classes',
+        \ 'n:modules',
+        \ 'f:functions',
+        \ 'v:variables',
+        \ 'v:varlambdas',
+        \ 'm:members',
+        \ 'i:interfaces',
+        \ 'e:enums',
+      \ ]
+    \ }
+    " let g:tagbar_type_typescript = {
+    "     \ 'ctagsbin' : 'tstags',
+    "     \ 'ctagsargs' : '-f-', 
+    "     \ 'kinds': [ 
+    "     \ 'e:enums:0:1', 
+    "     \ 'f:function:0:1',
+    "     \ 't:typealias:0:1', 
+    "     \ 'M:Module:0:1',
+    "     \ 'I:import:0:1',
+    "     \ 'i:interface:0:1', 
+    "     \ 'C:class:0:1', 
+    "     \ 'm:method:0:1',
+    "     \ 'p:property:0:1',
+    "     \ 'v:variable:0:1',
+    "     \ 'c:const:0:1',
+    "     \ ],
+    "     \ 'sort' : 0
+    "     \ } 
+    let g:tagbar_type_rust = {
+        \ 'ctagstype' : 'rust',
+        \ 'kinds' : [
+            \'T:types,type definitions',
+            \'f:functions,function definitions',
+            \'g:enum,enumeration names',
+            \'s:structure names',
+            \'m:modules,module names',
+            \'c:consts,static constants',
+            \'t:traits',
+            \'i:impls,trait implementations',
+        \]
+        \}
+
 Plugin 'corntrace/bufexplorer' " View the current buffers
     noremap <silent> <leader>3 :BufExplorer<CR>
     let g:bufExplorerDefaultHelp=0
@@ -111,30 +173,41 @@ Plugin 'Valloric/YouCompleteMe'     " The all-powerful completion engine
       let g:ycm_semantic_triggers = {}
     endif
     let g:ycm_semantic_triggers['typescript'] = ['.']
-    let g:ycm_rust_src_path = '/Users/reecestevens/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/src/rust/src'
+    " let g:rust_src_path = '~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src'
 Plugin 'Shougo/vimproc.vim'
 " Plugin 'racer-rust/vim-racer'
-    let g:racer_cmd = '~/.cargo/bin/racer'
-"     let g:racer_experimental_completer = 1
-Plugin 'ternjs/tern_for_vim'
-let g:tern#filetypes = [
-    \ 'jsx',
-    \ 'javascript.jsx'
-\ ]
+"     let g:racer_cmd = '~/.cargo/bin/racer'
 Plugin 'eagletmt/neco-ghc'
 
 
 "" Syntax Checking
 Plugin 'neomake/neomake'
+
     let g:neomake_check_on_open = 1
     let g:neomake_check_on_wq = 0
+    let g:neomake_rust_enabled_makers = ['cargo']
     let g:neomake_python_enabled_makers = ['pylint']
     let g:neomake_javascript_enabled_makers = ['eslint']
-    let g:neomake_rust_enabled_makers = ['cargo']
+    let g:neomake_typescript_enabled_makers = ['tsc', 'tslint']
+    " let g:neomake_typescript_enabled_makers = ['tsc']
     let g:neomake_haskell_enabled_makers = ['ghc-mod', 'hlint']
     let g:neomake_cpp_enabled_makers = []
     let g:neomake_java_enabled_makers = []
     let g:neomake_stl_format = '[%E{Err: %e}%B{, }%W{Warn: %w}]'
+
+     " let g:neomake_error_sign = {'text': 'E>', 'texthl': 'NeomakeErrorSign'}
+     let g:neomake_error_sign = {'text': 'E>', 'texthl': 'NeomakeMessageSign'}
+     let g:neomake_warning_sign = {
+         \   'text': 'W>',
+         \   'texthl': 'NeomakeWarningSign',
+         \ }
+     let g:neomake_message_sign = {
+          \   'text': 'M>',
+          \   'texthl': 'NeomakeMessageSign',
+          \ }
+     let g:neomake_note_sign = {'text': 'I>', 'texthl': 'NeomakeInfoSign'}
+     let g:neomake_info_sign = {'text': 'I>', 'texthl': 'NeomakeInfoSign'}
+     let g:neomake_highlight_columns = 5
 
 
 "" Filetype Specific Support
@@ -150,12 +223,35 @@ Plugin 'eagletmt/ghcmod-vim'
 
 "" Miscellaneous Plugins
 Plugin 'vimwiki/vimwiki'
+Plugin 'DrawIt'
+    let g:drawit_mode = 'S'
+
+" Plugin 'autozimu/LanguageClient-neovim'
+" let g:LanguageClient_serverCommands = {
+"     \ 'rust': ['rustup', 'run', 'nightly', 'rls']
+" \ }
+
 call vundle#end()
 filetype plugin indent on
 
+let g:color_scheme = "dark"
+function! ToggleColors()
+    if g:color_scheme == "dark"
+        let g:airline_theme='tomorrow'
+        colo Tomorrow
+        let g:color_scheme = "light"
+    else
+        let g:airline_theme='badwolf'
+        colo molokai
+        let g:color_scheme = "dark"
+    endif
+endfunction
+
+noremap <leader>li :call ToggleColors()<CR>
+
 let g:ycm_python_binary_path = 'python'
-let g:python_host_prog = '/usr/local/bin/python'
-let g:ycm_server_python_interpreter = '/usr/local/bin/python'
+" let g:python_host_prog = '/usr/bin/python' " Virtualenv workaround
+" let g:ycm_server_python_interpreter = '/usr/bin/python'
 
 " Completion and Syntax Checking Options
 "" YCM preferences
@@ -176,7 +272,7 @@ let g:EclimCompletionMethod = 'omnifunc'
 
 function! LatexOptions()
     setlocal spell
-    command! Latex execute "silent !pdflatex % > /dev/null && open %:r.pdf > /dev/null 2>&1 &" | redraw!
+    command! Latex execute "silent !pdflatex % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
     nnoremap <F2> :Latex<CR>
 endfunction
 
@@ -186,15 +282,27 @@ function! MarkdownOptions()
     syn region math start=/\$\$/ end=/\$\$/
     syn match math '\$[^$].\{-}\$'
     hi link math Statement
-    let g:markdown_fenced_languages = ["c","python","html","matlab","java"]
-    command! Pandoc execute "silent !pandoc --to=Latex --out=%:r.pdf % > /dev/null && open %:r.pdf > /dev/null 2>&1 &" | redraw!
+    let g:markdown_fenced_languages = ["c","python","html","matlab","java","typescript"]
+    command! Pandoc execute "silent !pandoc --to=Latex --out=%:r.pdf % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
+    command! PandocSlides execute "silent !pandoc --to=beamer --out=%:r.pdf % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
     nnoremap <F2> :Pandoc<CR>
+    nnoremap <F3> :PandocSlides<CR>
 endfunction
 
+function! RustOptions()
+    nnoremap <buffer> <F9> :RustRun<cr>
+    " nnoremap <leader>d :call LanguageClient#textDocument_hover() <cr>
+    " nnoremap <leader>D :call LanguageClient#textDocument_definition() <cr>
+    " nnoremap <leader>r :call LanguageClient#textDocument_rename() <cr>
+    " nnoremap <leader>R :call LanguageClient#textDocument_references() <cr>
+    " nnoremap <leader>f :call LanguageClient#textDocument_rangeFormatting() <cr>
+    " set omnifunc=LanguageClient#complete
+    " set omnifunc=LanguageClient_textDocument_completion
+endfunction
 
 function! PythonOptions()
     " Compile and run python files by pressing <F9>
-    nnoremap <buffer> <F9> :exec '!python' shellescape(@%, 1)<cr>
+    nnoremap <buffer> <F9> :exec '!python3' shellescape(@%, 1)<cr>
 endfunction
 
 function! HaskellOptions()
@@ -207,17 +315,19 @@ function! HaskellOptions()
     let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
 endfunction
 
-function! RustOptions()
-    nnoremap <buffer> <F9> :RustRun<cr>
+function! TypescriptOptions()
+    " Disable since we have Neomake checking
+    let g:ycm_show_diagnostics_ui = 0
 endfunction
-
 
 au FileType java call JavaOptions()
 au FileType python call PythonOptions()
 au FileType gitcommit setlocal tw=72
+au FileType rust call RustOptions()
+au FileType typescript call TypescriptOptions()
 au BufNewFile,BufRead,BufFilePre *.tex call LatexOptions()
 au BufNewFile,BufFilePre,BufRead *.md call MarkdownOptions()
-au BufNewFile,BufFilePre,BufRead *.rs call RustOptions()
 au BufNewFile,BufFilePre,BufRead *.tsx set filetype=typescript
 au BufNewFile,BufFilePre,BufRead *.hs setlocal omnifunc=necoghc#omnifunc
 au BufNewFile,BufFilePre,BufRead Jenkinsfile set filetype=groovy
+let g:neomake_logfile = '/tmp/neomake.log'
