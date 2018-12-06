@@ -66,5 +66,3 @@ au BufNewFile,BufFilePre,BufRead Jenkinsfile set filetype=groovy
 autocmd BufNewFile,BufRead,BufFilePre *.tex set spell
 " Fix constant redraw issue on Latex files
 autocmd FileType *.tex setlocal nocursorline
-" Compile Latex documents (Mac version, opens in Preview)
-command Latex execute "silent !pdflatex % > /dev/null && open %:r.pdf > /dev/null 2>&1 &" | redraw!
