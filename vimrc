@@ -9,10 +9,13 @@ set backspace=2
 syntax on
 set mouse=a
 set background=dark
+
+set ignorecase
+set smartcase
 set scrolloff=5
 set expandtab
 set cursorline
-set list
+set list " show whitespace
 set clipboard+=unnamedplus " neovim clipboard setting
 set diffopt=vertical       " Open vimdiffs in vertical splits
 let mapleader=","
@@ -20,6 +23,9 @@ set tags+=.git/tags
 
 set laststatus=2
 set encoding=utf-8
+
+" Allow project-specific vimrc configuration
+set secure exrc
 
 " Switch colon and semicolon
 nnoremap ; :
@@ -34,6 +40,9 @@ nnoremap k gk
 " Remap ESC to jk in quick succession
 inoremap jk <ESC>
 inoremap <ESC> <nop>
+
+" Remap number incrementing to not conflict with tmux binding
+nnoremap <C-b> <C-a>
 
 " For finger fumbling (thanks pato)
 command! W w
@@ -56,37 +65,31 @@ tnoremap <C-w>l <C-\><C-N><C-w>l
 nnoremap <leader>e :lopen<CR>
 nnoremap <leader>q :copen<CR>
 
+" Remap FZF to ctrl-p
+nnoremap <C-p> :FZF<CR>
+
 " Turn relative number on when scrolling
 " and off while typing
 autocmd InsertEnter * :set rnu!
 autocmd InsertLeave * :set rnu
 
 
-filetype off
-set rtp^=~/.config/nvim/bundle/Vundle.vim
-call vundle#begin()
-" General Plugins
-Plugin 'gmarik/Vundle.vim'
-Plugin 'L9'                         " Extend Vim's default scripts
-Plugin 'tpope/vim-obsession'        " Easier hooks to vim sessions
+call plug#begin('~/.vim/plugs')
 
-"" File Exploration Plugins
-Plugin 'ctrlpvim/ctrlp.vim'         " Enable fuzzy searching
-    " Ignore files listed in the .gitignore
-    let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
-Plugin 'scrooloose/nerdtree' " Show the current working directory in a nice tree
+" General Plugs
+Plug 'tpope/vim-obsession'        " Easier hooks to vim sessions
+
+" Show the current working directory in a nice tree
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
     noremap <silent> <leader>1 :NERDTreeToggle<CR>
     let NERDTreeIgnore = ['\~$', '\.pyc', '__pycache__']
     let NERDTreeMapHelp = '<f1>'
 
-
-"" Movement Plugins
-Plugin 'haya14busa/vim-easymotion'  " Double-leader for suggested jumps instead of numbers
-Plugin 'tpope/vim-unimpaired'       " Convenient mappings for the quickfix list
-
+"" Movement Plugs
+Plug 'tpope/vim-unimpaired'       " Convenient mappings for the quickfix list
 
 "" Asthetics
-Plugin 'vim-airline/vim-airline'    " Statusline
+Plug 'vim-airline/vim-airline'    " Statusline
     let g:airline_symbols_ascii = 1
     let g:airline_skip_empty_sections = 1
     let g:airline_theme='badwolf'
@@ -95,94 +98,61 @@ Plugin 'vim-airline/vim-airline'    " Statusline
     let g:airline#extensions#whitespace#enabled = 0
     let g:airline#extensions#obsession#enabled = 1
     let g:airline_section_y = '' " Disable file encoding section
-Plugin 'vim-airline/vim-airline-themes'
+Plug 'vim-airline/vim-airline-themes'
 
 
-"" File Editing Plugins
-Plugin 'tpope/vim-fugitive'         " The all-powerful git plugin
+"" File Editing Plugs
+Plug 'tpope/vim-fugitive'         " The all-powerful git plugin
     noremap <silent> <leader>5 :Gblame<CR>
-Plugin 'tpope/vim-rhubarb'
-Plugin 'airblade/vim-gitgutter'
+Plug 'tpope/vim-rhubarb'
+Plug 'airblade/vim-gitgutter'
     let g:gitgutter_sign_added = '∙'
     let g:gitgutter_sign_modified = '∙'
     let g:gitgutter_sign_removed = '∙'
     let g:gitgutter_sign_modified_removed = '∙'
-Plugin 'tpope/vim-commentary'
-Plugin 'majutsushi/tagbar.git' " Show the ctags in a file
+Plug 'tpope/vim-commentary'
+Plug 'majutsushi/tagbar' " Show the ctags in a file
     let g:tagbar_iconchars = ['+', '-']
     let g:airline#extensions#tagbar#enabled = 0
     noremap <silent> <leader>2 :TagbarToggle<CR>
-    let g:tagbar_type_typescript = {
-      \ 'ctagstype': 'typescript',
-      \ 'kinds': [
-        \ 'c:classes',
-        \ 'n:modules',
-        \ 'f:functions',
-        \ 'v:variables',
-        \ 'v:varlambdas',
-        \ 'm:members',
-        \ 'i:interfaces',
-        \ 'e:enums',
-      \ ]
-    \ }
-    " let g:tagbar_type_typescript = {
-    "     \ 'ctagsbin' : 'tstags',
-    "     \ 'ctagsargs' : '-f-', 
-    "     \ 'kinds': [ 
-    "     \ 'e:enums:0:1', 
-    "     \ 'f:function:0:1',
-    "     \ 't:typealias:0:1', 
-    "     \ 'M:Module:0:1',
-    "     \ 'I:import:0:1',
-    "     \ 'i:interface:0:1', 
-    "     \ 'C:class:0:1', 
-    "     \ 'm:method:0:1',
-    "     \ 'p:property:0:1',
-    "     \ 'v:variable:0:1',
-    "     \ 'c:const:0:1',
-    "     \ ],
-    "     \ 'sort' : 0
-    "     \ } 
-    let g:tagbar_type_rust = {
-        \ 'ctagstype' : 'rust',
-        \ 'kinds' : [
-            \'T:types,type definitions',
-            \'f:functions,function definitions',
-            \'g:enum,enumeration names',
-            \'s:structure names',
-            \'m:modules,module names',
-            \'c:consts,static constants',
-            \'t:traits',
-            \'i:impls,trait implementations',
-        \]
-        \}
 
-Plugin 'corntrace/bufexplorer' " View the current buffers
+Plug 'corntrace/bufexplorer' " View the current buffers
     noremap <silent> <leader>3 :BufExplorer<CR>
     let g:bufExplorerDefaultHelp=0
-Plugin 'sjl/gundo.vim.git' " View the undo/redo tree in a graphical format
+Plug 'sjl/gundo.vim' " View the undo/redo tree in a graphical format
     nnoremap <silent> <leader>4 :GundoToggle<CR>
     let g:gundo_right = 1
     let g:gundo_help  = 0
 
 
 "" Autocomplete
-Plugin 'Valloric/YouCompleteMe'     " The all-powerful completion engine
+" The all-powerful completion engine
+" Temporarily removing the --rust-completer flag since this functionality is
+" provided by `rust-analyzer`
+" Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --go-completer --ts-completer --rust-completer' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --go-completer --ts-completer' }
+    let g:ycm_auto_trigger=1
     let g:ycm_autoclose_preview_window_after_completion=1
     if !exists("g:ycm_semantic_triggers")
       let g:ycm_semantic_triggers = {}
     endif
     let g:ycm_semantic_triggers['typescript'] = ['.']
-    " let g:rust_src_path = '~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src'
-Plugin 'Shougo/vimproc.vim'
-" Plugin 'racer-rust/vim-racer'
-"     let g:racer_cmd = '~/.cargo/bin/racer'
-Plugin 'eagletmt/neco-ghc'
+    let g:ycm_language_server =
+    \ [
+    \   {
+    \     'name': 'rust',
+    \     'cmdline': ['rust-analyzer'],
+    \     'filetypes': ['rust'],
+    \     'project_root_files': ['Cargo.toml']
+    \   }
+    \ ]
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+Plug 'Shougo/vimproc.vim'
+Plug 'eagletmt/neco-ghc'
 
 "" Syntax Checking
-Plugin 'neomake/neomake'
-
+Plug 'neomake/neomake'
     let g:neomake_check_on_open = 1
     let g:neomake_check_on_wq = 0
     let g:neomake_rust_enabled_makers = ['cargo']
@@ -211,28 +181,23 @@ Plugin 'neomake/neomake'
 
 
 "" Filetype Specific Support
-Plugin 'rust-lang/rust.vim'
-Plugin 'leafgarland/typescript-vim'
-Plugin 'nvie/vim-flake8'
-Plugin 'moll/vim-node'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'mxw/vim-jsx'
+Plug 'rust-lang/rust.vim'
+Plug 'leafgarland/typescript-vim'
+Plug 'nvie/vim-flake8'
+Plug 'moll/vim-node'
+Plug 'kchmck/vim-coffee-script'
+Plug 'mxw/vim-jsx'
     let g:jsx_ext_required = 0
-Plugin 'eagletmt/ghcmod-vim'
+Plug 'eagletmt/ghcmod-vim'
+Plug 'prettier/vim-prettier'
+Plug 'kergoth/vim-bitbake'
 
-
-"" Miscellaneous Plugins
-Plugin 'vimwiki/vimwiki'
-Plugin 'DrawIt'
-    let g:drawit_mode = 'S'
-
-" Plugin 'autozimu/LanguageClient-neovim'
-" let g:LanguageClient_serverCommands = {
-"     \ 'rust': ['rustup', 'run', 'nightly', 'rls']
-" \ }
-
-call vundle#end()
-filetype plugin indent on
+"" Miscellaneous Plugs
+Plug 'flazz/vim-colorschemes'
+Plug 'morhetz/gruvbox'
+Plug 'psliwka/vim-smoothie'
+" Plug 'vimwiki/vimwiki'
+call plug#end()
 
 let g:color_scheme = "dark"
 function! ToggleColors()
@@ -250,14 +215,17 @@ endfunction
 noremap <leader>li :call ToggleColors()<CR>
 
 let g:ycm_python_binary_path = 'python'
-" let g:python_host_prog = '/usr/bin/python' " Virtualenv workaround
-" let g:ycm_server_python_interpreter = '/usr/bin/python'
+let g:python_host_prog = '/usr/bin/python' " Virtualenv workaround
+let g:python3_host_prog = '/usr/bin/python'
+let g:ycm_server_python_interpreter = '/usr/bin/python'
 
 " Completion and Syntax Checking Options
 "" YCM preferences
 noremap <leader>d :YcmCompleter GetDoc<CR>
 noremap <leader>D :YcmCompleter GoToDefinition<CR>
 noremap <leader>t :YcmCompleter GetType<CR>
+noremap <leader>f :YcmCompleter FixIt<CR>
+noremap <leader>r :YcmCompleter RefactorRename 
 "" Run syntax checkers after every file save
 autocmd BufWritePost * Neomake
 
@@ -274,8 +242,11 @@ function! LatexOptions()
     setlocal spell
     command! Latex execute "silent !pdflatex % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
     nnoremap <F2> :Latex<CR>
+    command! Pandoc execute "silent !pandoc --out=%:r.pdf % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
+    command! PandocSlides execute "silent !pandoc --to=beamer --out=%:r.pdf % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
+    nnoremap <F2> :Pandoc<CR>
+    nnoremap <F3> :PandocSlides<CR>
 endfunction
-
 
 function! MarkdownOptions()
     set filetype=markdown
@@ -291,13 +262,6 @@ endfunction
 
 function! RustOptions()
     nnoremap <buffer> <F9> :RustRun<cr>
-    " nnoremap <leader>d :call LanguageClient#textDocument_hover() <cr>
-    " nnoremap <leader>D :call LanguageClient#textDocument_definition() <cr>
-    " nnoremap <leader>r :call LanguageClient#textDocument_rename() <cr>
-    " nnoremap <leader>R :call LanguageClient#textDocument_references() <cr>
-    " nnoremap <leader>f :call LanguageClient#textDocument_rangeFormatting() <cr>
-    " set omnifunc=LanguageClient#complete
-    " set omnifunc=LanguageClient_textDocument_completion
 endfunction
 
 function! PythonOptions()
@@ -328,6 +292,6 @@ au FileType typescript call TypescriptOptions()
 au BufNewFile,BufRead,BufFilePre *.tex call LatexOptions()
 au BufNewFile,BufFilePre,BufRead *.md call MarkdownOptions()
 au BufNewFile,BufFilePre,BufRead *.tsx set filetype=typescript
+au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
 au BufNewFile,BufFilePre,BufRead *.hs setlocal omnifunc=necoghc#omnifunc
 au BufNewFile,BufFilePre,BufRead Jenkinsfile set filetype=groovy
-let g:neomake_logfile = '/tmp/neomake.log'
