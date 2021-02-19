@@ -62,8 +62,20 @@ tnoremap <C-w>k <C-\><C-N><C-w>k
 tnoremap <C-w>l <C-\><C-N><C-w>l
 
 " Easy access to location/quickfix lists
+function! QuickfixListIsOpen()
+    return getqflist({'winid': 1}).winid != 0
+endfunction
+
+function! QuickfixListToggle()
+    if QuickfixListIsOpen()
+        cclose
+    else
+        copen
+    endif
+endfunction
+
 nnoremap <leader>e :lopen<CR>
-nnoremap <leader>q :copen<CR>
+nnoremap <leader>q :call QuickfixListToggle()<CR>
 
 " Remap FZF to ctrl-p
 nnoremap <C-p> :FZF<CR>
@@ -82,7 +94,7 @@ Plug 'tpope/vim-obsession'        " Easier hooks to vim sessions
 " Show the current working directory in a nice tree
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
     noremap <silent> <leader>1 :NERDTreeToggle<CR>
-    let NERDTreeIgnore = ['\~$', '\.pyc', '__pycache__']
+    let NERDTreeIgnore = ['\~$', '\.pyc', '__pycache__', '\.fifo']
     let NERDTreeMapHelp = '<f1>'
 
 "" Movement Plugs
@@ -104,11 +116,12 @@ Plug 'vim-airline/vim-airline-themes'
 "" File Editing Plugs
 Plug 'tpope/vim-fugitive'         " The all-powerful git plugin
     noremap <silent> <leader>5 :Gblame<CR>
-Plug 'tpope/vim-rhubarb'
+Plug 'tpope/vim-rhubarb' " github Gbrowse support
+Plug 'tommcdo/vim-fubitive' " bitbucket Gbrowse support
 Plug 'airblade/vim-gitgutter'
-    let g:gitgutter_sign_added = '∙'
+    let g:gitgutter_sign_added = '+'
     let g:gitgutter_sign_modified = '∙'
-    let g:gitgutter_sign_removed = '∙'
+    let g:gitgutter_sign_removed = '-'
     let g:gitgutter_sign_modified_removed = '∙'
 Plug 'tpope/vim-commentary'
 Plug 'majutsushi/tagbar' " Show the ctags in a file
@@ -127,26 +140,27 @@ Plug 'sjl/gundo.vim' " View the undo/redo tree in a graphical format
 
 "" Autocomplete
 " The all-powerful completion engine
-" Temporarily removing the --rust-completer flag since this functionality is
-" provided by `rust-analyzer`
-" Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --go-completer --ts-completer --rust-completer' }
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --go-completer --ts-completer' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --go-completer --ts-completer --rust-completer --cs-completer' }
     let g:ycm_auto_trigger=1
     let g:ycm_autoclose_preview_window_after_completion=1
     if !exists("g:ycm_semantic_triggers")
       let g:ycm_semantic_triggers = {}
     endif
     let g:ycm_semantic_triggers['typescript'] = ['.']
-    let g:ycm_language_server =
-    \ [
-    \   {
-    \     'name': 'rust',
-    \     'cmdline': ['rust-analyzer'],
-    \     'filetypes': ['rust'],
-    \     'project_root_files': ['Cargo.toml']
-    \   }
-    \ ]
+
 " Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+" function! s:check_back_space() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
+
+Plug 'junegunn/fzf.vim'
 
 Plug 'Shougo/vimproc.vim'
 Plug 'eagletmt/neco-ghc'
@@ -195,8 +209,9 @@ Plug 'kergoth/vim-bitbake'
 "" Miscellaneous Plugs
 Plug 'flazz/vim-colorschemes'
 Plug 'morhetz/gruvbox'
-Plug 'psliwka/vim-smoothie'
+" Plug 'psliwka/vim-smoothie'
 " Plug 'vimwiki/vimwiki'
+" let g:vimwiki_list = [{'syntax': 'markdown'}]
 call plug#end()
 
 let g:color_scheme = "dark"
@@ -222,12 +237,34 @@ let g:ycm_server_python_interpreter = '/usr/bin/python'
 " Completion and Syntax Checking Options
 "" YCM preferences
 noremap <leader>d :YcmCompleter GetDoc<CR>
+" noremap <leader>D <plug>(YCMHover)
 noremap <leader>D :YcmCompleter GoToDefinition<CR>
 noremap <leader>t :YcmCompleter GetType<CR>
 noremap <leader>f :YcmCompleter FixIt<CR>
-noremap <leader>r :YcmCompleter RefactorRename 
+noremap <leader>r :YcmCompleter RefactorRename
+
+" coc-nvim preferences
+" nmap <silent> <leader>d :call CocAction('doHover')<CR>
+" nnoremap <silent> <leader>d :call <SID>show_documentation()<CR>
+" nmap <silent> <leader>D <Plug>(coc-definition)
+" nmap <silent> <leader>t <Plug>(coc-type-definition)
+" nmap <silent> <leader>r <Plug>(coc-rename)
+" nmap <silent> <leader>R <Plug>(coc-references)
+" nmap <silent> <leader>f <Plug>(coc-fix-current)
+" nmap <silent> [g <Plug>(coc-diagnostic-prev)
+" nmap <silent> ]g <Plug>(coc-diagnostic-next)
+" nmap <leader>g  :CocDiagnostics<CR>
+
 "" Run syntax checkers after every file save
 autocmd BufWritePost * Neomake
+
+" function! s:show_documentation()
+"   if (index(['vim','help'], &filetype) >= 0)
+"     execute 'h '.expand('<cword>')
+"   else
+"     call CocAction('doHover')
+"   endif
+" endfunction
 
 " Filetype Specific Settings
 function! JavaOptions()
@@ -236,7 +273,6 @@ function! JavaOptions()
     nnoremap <leader>I :JavaImportOrganize<CR>
 endfunction
 let g:EclimCompletionMethod = 'omnifunc'
-
 
 function! LatexOptions()
     setlocal spell
@@ -253,7 +289,7 @@ function! MarkdownOptions()
     syn region math start=/\$\$/ end=/\$\$/
     syn match math '\$[^$].\{-}\$'
     hi link math Statement
-    let g:markdown_fenced_languages = ["c","python","html","matlab","java","typescript"]
+    let g:markdown_fenced_languages = ["c","rust","python","html","matlab","java","typescript"]
     command! Pandoc execute "silent !pandoc --to=Latex --out=%:r.pdf % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
     command! PandocSlides execute "silent !pandoc --to=beamer --out=%:r.pdf % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
     nnoremap <F2> :Pandoc<CR>
@@ -265,8 +301,8 @@ function! RustOptions()
 endfunction
 
 function! PythonOptions()
-    " Compile and run python files by pressing <F9>
-    nnoremap <buffer> <F9> :exec '!python3' shellescape(@%, 1)<cr>
+    " Run python scripts by pressing <F9>
+    nnoremap <buffer> <F9> :exec '!python' shellescape(@%, 1)<cr>
 endfunction
 
 function! HaskellOptions()
@@ -289,9 +325,11 @@ au FileType python call PythonOptions()
 au FileType gitcommit setlocal tw=72
 au FileType rust call RustOptions()
 au FileType typescript call TypescriptOptions()
+au FileType typescript.tsx call TypescriptOptions()
 au BufNewFile,BufRead,BufFilePre *.tex call LatexOptions()
 au BufNewFile,BufFilePre,BufRead *.md call MarkdownOptions()
-au BufNewFile,BufFilePre,BufRead *.tsx set filetype=typescript
+au BufNewFile,BufFilePre,BufRead *.tsx set filetype=typescript.tsx
+au BufNewFile,BufFilePre,BufRead *.jsx set filetype=javascript.jsx
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
 au BufNewFile,BufFilePre,BufRead *.hs setlocal omnifunc=necoghc#omnifunc
 au BufNewFile,BufFilePre,BufRead Jenkinsfile set filetype=groovy
