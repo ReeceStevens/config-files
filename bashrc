@@ -39,7 +39,7 @@ alias gch='git checkout'
 alias gcp='git cherry-pick'
 
 # Autocomplete
-source ~/.config/bash/autocomplete/git_autocomplete.bash
+source ~/config-files/bash/autocomplete/git_autocomplete.bash
 
 if hash __git_complete 2>/dev/null; then
     __git_complete gc _git_commit
@@ -52,8 +52,8 @@ if hash __git_complete 2>/dev/null; then
     __git_complete gcp _git_cherry_pick
 fi
 
-source ~/.config/bash/autocomplete/fzf-completion.bash
-source ~/.config/bash/autocomplete/tmux.bash
+source ~/config-files/bash/autocomplete/fzf-completion.bash
+source ~/config-files/bash/autocomplete/tmux.bash
 
 command nodenv rehash 2>/dev/null
 
