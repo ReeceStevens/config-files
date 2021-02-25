@@ -80,6 +80,8 @@ export LIBRARY_PATH=$LIBRARY_PATH:"/opt/cuda/include"
 export ICAROOT="/home/reece/innolitics/bin/ICAClient/linuxx64"
 # Fix issues with swing-based UIs not rendering properly in Wayland
 export _JAVA_AWT_WM_NONREPARENTING=1
+# Enable OBS to work correctly with wlroots compositors
+export QT_QPA_PLATFORM=xcb
 export XDG_CURRENT_DESKTOP=sway
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
