@@ -10,16 +10,18 @@ syntax on
 set mouse=a
 set background=dark
 
+" Make search case-insensitive, unless searching with upper-case characters
 set ignorecase
 set smartcase
-set scrolloff=5
+
+set scrolloff=5 " start scrolling when 5 lines away from edge of screen
 set expandtab
 set cursorline
 set list " show whitespace
 set clipboard+=unnamedplus " neovim clipboard setting
 set diffopt=vertical       " Open vimdiffs in vertical splits
 let mapleader=","
-set tags+=.git/tags
+set tags+=.git/tags " include git tag files, if present
 
 set laststatus=2
 set encoding=utf-8
@@ -52,7 +54,9 @@ command! Q q
 command! Wa wa
 command! WA wa
 
+" easier terminal access
 nnoremap <leader>c :terminal<CR>
+" zoom current pane into its own tab
 nnoremap <leader>z :tabe %<CR>
 
 " Easier terminal exit
@@ -124,12 +128,11 @@ Plug 'airblade/vim-gitgutter'
     let g:gitgutter_sign_modified = '∙'
     let g:gitgutter_sign_removed = '-'
     let g:gitgutter_sign_modified_removed = '∙'
-Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-commentary' " context-aware comments with `gc`
 Plug 'majutsushi/tagbar' " Show the ctags in a file
     let g:tagbar_iconchars = ['+', '-']
     let g:airline#extensions#tagbar#enabled = 0
     noremap <silent> <leader>2 :TagbarToggle<CR>
-
 Plug 'corntrace/bufexplorer' " View the current buffers
     noremap <silent> <leader>3 :BufExplorer<CR>
     let g:bufExplorerDefaultHelp=0
@@ -138,112 +141,67 @@ Plug 'sjl/gundo.vim' " View the undo/redo tree in a graphical format
     let g:gundo_right = 1
     let g:gundo_help  = 0
 
-
-"" Autocomplete
-" The all-powerful completion engine
-" Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --go-completer --ts-completer --rust-completer --cs-completer' }
-"     let g:ycm_auto_trigger=1
-"     let g:ycm_autoclose_preview_window_after_completion=1
-"     if !exists("g:ycm_semantic_triggers")
-"       let g:ycm_semantic_triggers = {}
-"     endif
-"     let g:ycm_semantic_triggers['typescript'] = ['.']
-
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" inoremap <silent><expr> <TAB>
-"       \ pumvisible() ? "\<C-n>" :
-"       \ <SID>check_back_space() ? "\<TAB>" :
-"       \ coc#refresh()
-" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-" function! s:check_back_space() abort
-"   let col = col('.') - 1
-"   return !col || getline('.')[col - 1]  =~# '\s'
-" endfunction
-
-" Plug 'Shougo/vimproc.vim'
-Plug 'eagletmt/neco-ghc'
-
-"" Syntax Checking
-Plug 'neomake/neomake'
-    let g:neomake_check_on_open = 1
-    let g:neomake_check_on_wq = 0
-    let g:neomake_rust_enabled_makers = ['cargo']
-    let g:neomake_python_enabled_makers = ['pylint']
-    let g:neomake_javascript_enabled_makers = ['eslint']
-    let g:neomake_typescript_enabled_makers = ['tsc', 'tslint']
-    " let g:neomake_typescript_enabled_makers = ['tsc']
-    let g:neomake_haskell_enabled_makers = ['ghc-mod', 'hlint']
-    let g:neomake_cpp_enabled_makers = []
-    let g:neomake_java_enabled_makers = []
-    let g:neomake_stl_format = '[%E{Err: %e}%B{, }%W{Warn: %w}]'
-
-     " let g:neomake_error_sign = {'text': 'E>', 'texthl': 'NeomakeErrorSign'}
-     let g:neomake_error_sign = {'text': 'E>', 'texthl': 'NeomakeMessageSign'}
-     let g:neomake_warning_sign = {
-         \   'text': 'W>',
-         \   'texthl': 'NeomakeWarningSign',
-         \ }
-     let g:neomake_message_sign = {
-          \   'text': 'M>',
-          \   'texthl': 'NeomakeMessageSign',
-          \ }
-     let g:neomake_note_sign = {'text': 'I>', 'texthl': 'NeomakeInfoSign'}
-     let g:neomake_info_sign = {'text': 'I>', 'texthl': 'NeomakeInfoSign'}
-     let g:neomake_highlight_columns = 5
-
-
 "" Filetype Specific Support
 Plug 'rust-lang/rust.vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'nvie/vim-flake8'
 Plug 'moll/vim-node'
 Plug 'kchmck/vim-coffee-script'
-Plug 'mxw/vim-jsx'
-    let g:jsx_ext_required = 0
+Plug 'yuezk/vim-js'
+Plug 'eagletmt/neco-ghc'
+Plug 'maxmellon/vim-jsx-pretty'
 Plug 'eagletmt/ghcmod-vim'
 Plug 'prettier/vim-prettier'
 Plug 'kergoth/vim-bitbake'
+Plug 'evanleck/vim-svelte'
+    let g:svelte_preprocessors = ['typescript']
 
 "" Miscellaneous Plugs
-" Plug 'flazz/vim-colorschemes'
-" Plug 'morhetz/gruvbox'
+Plug 'flazz/vim-colorschemes'
+Plug 'morhetz/gruvbox'
+" Disabling these plugins for now due to performance issues
 " Plug 'psliwka/vim-smoothie'
 " Plug 'vimwiki/vimwiki'
 " let g:vimwiki_list = [{'syntax': 'markdown'}]
 
+" LSP and autocomplete
 Plug 'hrsh7th/nvim-compe'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'ray-x/lsp_signature.nvim'
 
+" Fuzzy search
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+
+" Markdown table alignment
 Plug 'junegunn/vim-easy-align'
-Plug 'tanvirtin/monokai.nvim'
 
 call plug#end()
 
-" colo monokai
-" set termguicolors
+" Begin neovim-specific lua configuration
 
 lua << EOF
 
+-- Treesitter config
+-- This is currently disabled to streamline performance.
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
   -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
   highlight = {
-    enable = true,              -- false will disable the whole extension
+    enable = false,              -- false will disable the whole extension
     -- disable = { "c", "rust" },  -- list of language that will be disabled
   },
 }
 
+-- Autocomplete configuration
+-- Note: Most of this is the default recommended config from the README
 require'compe'.setup {
   enabled = true;
   autocomplete = true;
   debug = false;
   min_length = 1;
-  preselect = 'enable';
+  preselect = 'disable';
   throttle_time = 80;
   source_timeout = 200;
   resolve_timeout = 800;
@@ -267,12 +225,15 @@ require'compe'.setup {
     nvim_lsp = true;
     nvim_lua = true;
     -- vsnip = true;
-    ultisnips = true;
-    luasnip = true;
+    -- ultisnips = true;
+    -- luasnip = true;
   };
 }
 
--- Tab navigation for autocompletion (from nvim-compe README)
+---------------------------------------------------------------
+-- Tab navigation for autocompletion (from nvim-compe README)--
+---------------------------------------------------------------
+
 local t = function(str)
   return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
@@ -288,8 +249,6 @@ end
 _G.tab_complete = function()
   if vim.fn.pumvisible() == 1 then
     return t "<C-n>"
-  -- elseif vim.fn['vsnip#available'](1) == 1 then
-  --   return t "<Plug>(vsnip-expand-or-jump)"
   elseif check_back_space() then
     return t "<Tab>"
   else
@@ -299,8 +258,6 @@ end
 _G.s_tab_complete = function()
   if vim.fn.pumvisible() == 1 then
     return t "<C-p>"
-  -- elseif vim.fn['vsnip#jumpable'](-1) == 1 then
-  --   return t "<Plug>(vsnip-jump-prev)"
   else
     -- If <S-Tab> is not working in your terminal, change it to <C-h>
     return t "<S-Tab>"
@@ -311,6 +268,14 @@ vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+
+
+--------------------------------------
+-- LSP Configuration and Keybindings--
+--------------------------------------
+
+-- This configuration was taken from the recommended config on the project
+-- README and then configured to match my preferred keybindings.
 
 local nvim_lsp = require('lspconfig')
 
@@ -337,7 +302,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   buf_set_keymap('n', '<leader>t', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   buf_set_keymap('n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   buf_set_keymap('n', '<leader>R', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
@@ -346,15 +311,21 @@ local on_attach = function(client, bufnr)
   buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 
   -- Attach function signature helper
-  require "lsp_signature".on_attach()
+  cfg = {
+    bind = true, -- This is mandatory, otherwise border config won't get registered.
+    handler_opts = {
+      border = "single"
+    },
+    hint_prefix = "",
+  }
+  require "lsp_signature".on_attach(cfg)
 
 end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
 -- local servers = { "pyright", "rust_analyzer", "tsserver" }
--- local servers = { "pylsp", "rust_analyzer"}
-local servers = { "rust_analyzer"}
+local servers = { "pylsp", "rust_analyzer", "svelte"}
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
@@ -363,14 +334,6 @@ for _, lsp in ipairs(servers) do
     }
   }
 end
-
-nvim_lsp.pylsp.setup {
-    cmd = {"pyls"},
-    on_attach = on_attach,
-    flags = {
-      debounce_text_changes = 150,
-    }
-}
 
 -- Configure typescript server to use locally installed version
 nvim_lsp.tsserver.setup {
@@ -381,7 +344,45 @@ nvim_lsp.tsserver.setup {
     }
 }
 
-vim.lsp.set_log_level("debug");
+nvim_lsp.diagnosticls.setup {
+    filetypes = {"javascript", "javascript.jsx", "typescript", "typescript.tsx"},
+    init_options = {
+        linters = {
+            eslint = {
+                command = "./node_modules/.bin/eslint",
+                rootPatterns = {".eslintrc.js"},
+                debounce = 100,
+                args = {
+                    "--stdin",
+                    "--stdin-filename",
+                    "%filepath",
+                    "--format",
+                    "json"
+                },
+                sourceName = "eslint",
+                parseJson = {
+                    errorsRoot = "[0].messages",
+                    line = "line",
+                    column = "column",
+                    endLine = "endLine",
+                    endColumn = "endColumn",
+                    message = "${message} [${ruleId}]",
+                    security = "severity"
+                },
+                securities = {
+                    [2] = "error",
+                    [1] = "warning"
+                }
+            },
+        },
+        filetypes = {
+            javascript = "eslint",
+            typescript = "eslint",
+            ["javascript.jsx"] = "eslint",
+            ["typescript.tsx"] = "eslint",
+        }
+    }
+}
 
 -- Allow hiding of diagnostic messages
 vim.g.diagnostics_visible = true
@@ -408,6 +409,7 @@ end
 
 vim.api.nvim_buf_set_keymap(0, 'n', '<leader>h', ':call v:lua.toggle_diagnostics()<CR>', {silent=true, noremap=true})
 
+-- Source local project-specific vim configurations
 local local_vimrc = vim.fn.getcwd()..'/.nvimrc'
 if vim.loop.fs_stat(local_vimrc) then
   vim.cmd('source '..local_vimrc)
@@ -415,6 +417,7 @@ end
 
 EOF
 
+" Flip between light or dark theme with `,li`
 let g:color_scheme = "dark"
 function! ToggleColors()
     if g:color_scheme == "dark"
@@ -430,10 +433,8 @@ endfunction
 
 noremap <leader>li :call ToggleColors()<CR>
 
-"" Run syntax checkers after every file save
-autocmd BufWritePost * Neomake
-
 " Filetype Specific Settings
+
 function! JavaOptions()
     nnoremap <leader>d :JavaDocPreview<CR>
     nnoremap <leader>i :JavaImport<CR>
@@ -485,17 +486,11 @@ function! HaskellOptions()
     let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
 endfunction
 
-function! TypescriptOptions()
-    " Disable since we have Neomake checking
-    let g:ycm_show_diagnostics_ui = 0
-endfunction
-
 au FileType java call JavaOptions()
 au FileType python call PythonOptions()
 au FileType gitcommit setlocal tw=72
 au FileType rust call RustOptions()
-au FileType typescript call TypescriptOptions()
-au FileType typescript.tsx call TypescriptOptions()
+" Disabled since this causes major performance degredation editing markdown
 " au FileType markdown setlocal foldlevel=99
 au BufNewFile,BufRead,BufFilePre *.tex call LatexOptions()
 au BufNewFile,BufFilePre,BufRead *.md call MarkdownOptions()
@@ -504,4 +499,3 @@ au BufNewFile,BufFilePre,BufRead *.jsx set filetype=javascript.jsx
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
 au BufNewFile,BufFilePre,BufRead *.hs setlocal omnifunc=necoghc#omnifunc
 au BufNewFile,BufFilePre,BufRead Jenkinsfile set filetype=groovy
-
