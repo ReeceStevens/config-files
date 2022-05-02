@@ -120,7 +120,7 @@ Plug 'vim-airline/vim-airline-themes'
 
 "" File Editing Plugs
 Plug 'tpope/vim-fugitive'         " The all-powerful git plugin
-    noremap <silent> <leader>5 :Gblame<CR>
+    noremap <silent> <leader>5 :Git blame<CR>
 Plug 'tpope/vim-rhubarb' " github Gbrowse support
 Plug 'tommcdo/vim-fubitive' " bitbucket Gbrowse support
 Plug 'airblade/vim-gitgutter'
@@ -162,13 +162,13 @@ Plug 'morhetz/gruvbox'
 " Disabling these plugins for now due to performance issues
 " Plug 'psliwka/vim-smoothie'
 " Plug 'vimwiki/vimwiki'
-" let g:vimwiki_list = [{'syntax': 'markdown'}]
+let g:vimwiki_list = [{'syntax': 'markdown'}]
 
 " LSP and autocomplete
 Plug 'hrsh7th/nvim-compe'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'ray-x/lsp_signature.nvim'
+" Plug 'ray-x/lsp_signature.nvim'
 
 " Fuzzy search
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -177,16 +177,31 @@ Plug 'junegunn/fzf.vim'
 " Markdown table alignment
 Plug 'junegunn/vim-easy-align'
 
+" Telescope for file searching
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+    " Find files using Telescope command-line sugar.
+    " nnoremap <leader>ff <cmd>Telescope find_files<cr>
+    " nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+    " nnoremap <leader>fb <cmd>Telescope buffers<cr>
+    " nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+
 call plug#end()
+
+
 
 " Begin neovim-specific lua configuration
 
 lua << EOF
 
+-- Telescope config
+require('telescope').load_extension('fzf')
+
 -- Treesitter config
 -- This is currently disabled to streamline performance.
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
   -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
   highlight = {
     enable = false,              -- false will disable the whole extension
@@ -304,11 +319,11 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   buf_set_keymap('n', '<leader>R', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+  buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-  buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+  -- buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 
   -- Attach function signature helper
   cfg = {
@@ -318,14 +333,14 @@ local on_attach = function(client, bufnr)
     },
     hint_prefix = "",
   }
-  require "lsp_signature".on_attach(cfg)
+  -- require "lsp_signature".on_attach(cfg)
 
 end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
 -- local servers = { "pyright", "rust_analyzer", "tsserver" }
-local servers = { "pylsp", "rust_analyzer", "svelte"}
+local servers = { "pylsp", "rust_analyzer", "svelte", "clangd"}
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
     on_attach = on_attach,
@@ -337,7 +352,6 @@ end
 
 -- Configure typescript server to use locally installed version
 nvim_lsp.tsserver.setup {
-    cmd = {"npx", "typescript-language-server", "--stdio"},
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150,
@@ -384,13 +398,21 @@ nvim_lsp.diagnosticls.setup {
     }
 }
 
+nvim_lsp.arduino_language_server.setup {
+    cmd = {"arduino-language-server", "-cli-config", "/Users/reecestevens/.arduino15/arduino-cli.yaml", "-clangd", "/usr/bin/clangd", "-fqbn", "adafruit:nrf52:feather52840" },
+    on_attach = on_attach,
+    flags = {
+      debounce_text_changes = 150,
+    }
+}
+
 -- Allow hiding of diagnostic messages
 vim.g.diagnostics_visible = true
 
 function _G.toggle_diagnostics()
   if vim.g.diagnostics_visible then
     vim.g.diagnostics_visible = false
-    vim.lsp.diagnostic.clear(0)
+    vim.lsp.diagnostic.disable()
     vim.lsp.handlers["textDocument/publishDiagnostics"] = function() end
     print('Diagnostics are hidden')
   else
@@ -403,6 +425,7 @@ function _G.toggle_diagnostics()
         update_in_insert = false,
       }
     )
+    vim.lsp.diagnostic.enable()
     print('Diagnostics are visible')
   end
 end
@@ -416,6 +439,9 @@ if vim.loop.fs_stat(local_vimrc) then
 end
 
 EOF
+
+let g:do_filetype_lua = 1
+let g:did_load_filetypes = 0
 
 " Flip between light or dark theme with `,li`
 let g:color_scheme = "dark"
