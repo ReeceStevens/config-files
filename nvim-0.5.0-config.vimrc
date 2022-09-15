@@ -190,13 +190,16 @@ Plug 'junegunn/vim-easy-align'
 
 " Telescope for file searching
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
     " Find files using Telescope command-line sugar.
     " nnoremap <leader>ff <cmd>Telescope find_files<cr>
-    " nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+    nnoremap <leader>fg <cmd>Telescope live_grep<cr>
     " nnoremap <leader>fb <cmd>Telescope buffers<cr>
     " nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+
+Plug 'psf/black', { 'branch': 'stable' }
+Plug 'fisadev/vim-isort'
 
 call plug#end()
 
