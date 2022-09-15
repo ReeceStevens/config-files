@@ -93,7 +93,14 @@ nnoremap <C-p> :FZF<CR>
 autocmd InsertEnter * :set rnu!
 autocmd InsertLeave * :set rnu
 
-" let g:markdown_folding = 1
+" Git shortcuts
+nnoremap <leader>gc :Git commit<CR>
+nnoremap <leader>gs :Git<CR>
+nnoremap <leader>gp :Git push<CR>
+nnoremap <leader>gl :Git log<CR>
+vnoremap <leader>gcl :Gclog <CR>
+
+let g:python3_host_prog = $HOME . '/.vim/python-virtual-env/nvim-venv/bin/python'
 
 call plug#begin('~/.vim/plugs')
 
