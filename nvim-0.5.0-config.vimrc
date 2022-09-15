@@ -29,6 +29,10 @@ set encoding=utf-8
 " Allow project-specific vimrc configuration
 set secure exrc
 
+if has("termguicolors")
+    set termguicolors
+endif
+
 " Switch colon and semicolon
 nnoremap ; :
 vnoremap ; :
@@ -448,8 +452,8 @@ let g:color_scheme = "dark"
 function! ToggleColors()
     if g:color_scheme == "dark"
         let g:airline_theme='tomorrow'
-        colo Tomorrow
-        let g:color_scheme = "light"
+        colo solarized8_light_high
+        let g:color_scheme = "solarized"
     else
         let g:airline_theme='badwolf'
         colo molokai
