@@ -1,3 +1,5 @@
+" NOTE: This is a config for 'vanilla' vim. See neovim configuration for the
+" one in active use.
 " Typing preferences and asthetics
 colo molokai
 set tabstop=4
