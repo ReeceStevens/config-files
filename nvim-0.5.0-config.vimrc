@@ -201,6 +201,8 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'psf/black', { 'branch': 'stable' }
 Plug 'fisadev/vim-isort'
 
+Plug 'ReeceStevens/vim-reviewer'
+
 call plug#end()
 
 
