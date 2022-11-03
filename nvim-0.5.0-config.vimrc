@@ -133,7 +133,9 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-fugitive'         " The all-powerful git plugin
     noremap <silent> <leader>5 :Git blame<CR>
 Plug 'tpope/vim-rhubarb' " github Gbrowse support
-Plug 'tommcdo/vim-fubitive' " bitbucket Gbrowse support
+" NOTE: bitbucket plugin seems to be continually throwing errors. Disabling
+" until I have the need to work on a bitbucket project again.
+" Plug 'tommcdo/vim-fubitive' " bitbucket Gbrowse support
 Plug 'airblade/vim-gitgutter'
     let g:gitgutter_sign_added = '+'
     let g:gitgutter_sign_modified = '∙'
@@ -147,10 +149,13 @@ Plug 'majutsushi/tagbar' " Show the ctags in a file
 Plug 'corntrace/bufexplorer' " View the current buffers
     noremap <silent> <leader>3 :BufExplorer<CR>
     let g:bufExplorerDefaultHelp=0
-Plug 'sjl/gundo.vim' " View the undo/redo tree in a graphical format
-    nnoremap <silent> <leader>4 :GundoToggle<CR>
-    let g:gundo_right = 1
-    let g:gundo_help  = 0
+" NOTE: Had to switch to a fork of gundo after some long-running bugs remained
+" unresolved, breaking the plugin entirely.
+Plug 'simnalamburt/vim-mundo' " View the undo/redo tree in a graphical format
+    nnoremap <silent> <leader>4 :MundoToggle<CR>
+    let g:mundo_right = 1
+    let g:mundo_help  = 0
+
 
 "" Filetype Specific Support
 Plug 'rust-lang/rust.vim'
