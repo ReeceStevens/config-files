@@ -21,6 +21,7 @@ set list " show whitespace
 set clipboard+=unnamedplus " neovim clipboard setting
 set diffopt=vertical       " Open vimdiffs in vertical splits
 let mapleader=","
+let maplocalleader=","
 set tags+=.git/tags " include git tag files, if present
 
 set laststatus=2
@@ -164,9 +165,7 @@ Plug 'nvie/vim-flake8'
 Plug 'moll/vim-node'
 Plug 'kchmck/vim-coffee-script'
 Plug 'yuezk/vim-js'
-Plug 'eagletmt/neco-ghc'
 Plug 'maxmellon/vim-jsx-pretty'
-Plug 'eagletmt/ghcmod-vim'
 Plug 'prettier/vim-prettier'
 Plug 'kergoth/vim-bitbake'
 Plug 'evanleck/vim-svelte'
@@ -206,11 +205,17 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'psf/black', { 'branch': 'stable' }
 Plug 'fisadev/vim-isort'
 
+Plug 'sainnhe/everforest'
+Plug 'NLKNguyen/papercolor-theme'
+
+Plug 'jceb/vim-orgmode'
+let g:org_agenda_files=['~/innolitics/notes/notes.org']
+
+Plug 'github/copilot.vim'
+
 Plug 'ReeceStevens/vim-reviewer'
 
 call plug#end()
-
-
 
 " Begin neovim-specific lua configuration
 
@@ -371,11 +376,33 @@ for _, lsp in ipairs(servers) do
   }
 end
 
+local function organize_imports()
+  -- gets the current bufnr if no bufnr is passed
+  if not bufnr then bufnr = vim.api.nvim_get_current_buf() end
+
+  -- params for the request
+  local params = {
+      command = "_typescript.organizeImports",
+      arguments = {vim.api.nvim_buf_get_name(bufnr)},
+      title = ""
+  }
+
+  -- perform a syncronous request
+  -- 500ms timeout depending on the size of file a bigger timeout may be needed
+  vim.lsp.buf_request_sync(bufnr, "workspace/executeCommand", params, 500)
+end
+
 -- Configure typescript server to use locally installed version
 nvim_lsp.tsserver.setup {
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150,
+    },
+    commands = {
+      OrganizeImports = {
+        organize_imports,
+        description = "Organize Imports"
+      }
     }
 }
 
@@ -427,6 +454,12 @@ nvim_lsp.arduino_language_server.setup {
     }
 }
 
+nvim_lsp.hls.setup {
+    filetypes = {
+        'haskell', 'lhaskell', 'cabal'
+    }
+}
+
 -- Allow hiding of diagnostic messages
 vim.g.diagnostics_visible = true
 
@@ -469,16 +502,23 @@ let g:color_scheme = "dark"
 function! ToggleColors()
     if g:color_scheme == "dark"
         let g:airline_theme='tomorrow'
-        colo solarized8_light_high
+        " colo solarized8_light_high
+        set background=light
+        colo everforest
         let g:color_scheme = "solarized"
     else
         let g:airline_theme='badwolf'
+        set background=dark
         colo molokai
         let g:color_scheme = "dark"
     endif
 endfunction
 
 noremap <leader>li :call ToggleColors()<CR>
+
+nnoremap <leader>cp :Copilot enable<CR>
+nnoremap <leader>cpd :Copilot disable<CR>
+
 
 " Filetype Specific Settings
 
@@ -491,10 +531,10 @@ let g:EclimCompletionMethod = 'omnifunc'
 
 function! LatexOptions()
     setlocal spell
-    command! Latex execute "silent !pdflatex % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
+    command! Latex execute "silent !pdflatex % > /dev/null && open %:r.pdf > /dev/null 2>&1 &" | redraw!
     nnoremap <F2> :Latex<CR>
-    command! Pandoc execute "silent !pandoc --out=%:r.pdf % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
-    command! PandocSlides execute "silent !pandoc --to=beamer --out=%:r.pdf % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
+    command! Pandoc execute "silent !pandoc --out=%:r.pdf % > /dev/null && open %:r.pdf > /dev/null 2>&1 &" | redraw!
+    command! PandocSlides execute "silent !pandoc --to=beamer --out=%:r.pdf % > /dev/null && open %:r.pdf > /dev/null 2>&1 &" | redraw!
     nnoremap <F2> :Pandoc<CR>
     nnoremap <F3> :PandocSlides<CR>
 endfunction
@@ -504,10 +544,11 @@ function! MarkdownOptions()
     syn region math start=/\$\$/ end=/\$\$/
     syn match math '\$[^$].\{-}\$'
     hi link math Statement
-    let g:markdown_fenced_languages = ["c","rust","python","html","matlab","java","typescript"]
-    " command! Pandoc execute "silent !pandoc --to=Latex --out=%:r.pdf % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
-    command! Pandoc execute "silent !pandoc --out=%:r.pdf % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
-    command! PandocSlides execute "silent !pandoc --to=beamer --out=%:r.pdf % > /dev/null && evince %:r.pdf > /dev/null 2>&1 &" | redraw!
+    " let g:markdown_fenced_languages = ["c","rust","python","html","matlab","java","typescript"]
+    " let g:vim_markdown_fenced_languages = ["c","rust","python","html","matlab","java","typescript"]
+    " command! Pandoc execute "silent !pandoc --to=Latex --out=%:r.pdf % > /dev/null && open %:r.pdf > /dev/null 2>&1 &" | redraw!
+    command! Pandoc execute "silent !pandoc --out=%:r.pdf % > /dev/null && open %:r.pdf > /dev/null 2>&1 &" | redraw!
+    command! PandocSlides execute "silent !pandoc --to=beamer --out=%:r.pdf % > /dev/null && open %:r.pdf > /dev/null 2>&1 &" | redraw!
     nnoremap <F2> :Pandoc<CR>
     nnoremap <F3> :PandocSlides<CR>
     " Align markdown tables
@@ -543,6 +584,5 @@ au BufNewFile,BufRead,BufFilePre *.tex call LatexOptions()
 au BufNewFile,BufFilePre,BufRead *.md call MarkdownOptions()
 au BufNewFile,BufFilePre,BufRead *.tsx set filetype=typescript.tsx
 au BufNewFile,BufFilePre,BufRead *.jsx set filetype=javascript.jsx
-au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
 au BufNewFile,BufFilePre,BufRead *.hs setlocal omnifunc=necoghc#omnifunc
 au BufNewFile,BufFilePre,BufRead Jenkinsfile set filetype=groovy
