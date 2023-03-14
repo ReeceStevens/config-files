@@ -18,11 +18,11 @@ let g:python3_host_prog = $HOME . '/.vim/python-virtual-env/nvim-venv/bin/python
 runtime viml/plugins.vim
 runtime viml/keybindings.vim
 
-runtime autocomplete.lua
-runtime lsp.lua
-runtime orgmode-config.lua
+runtime lua/lsp.lua
+runtime lua/orgmode-config.lua
+runtime lua/autocomplete.lua
 
-runtime local-config.lua
+runtime lua/local-config.lua
 
 let g:do_filetype_lua = 1
 let g:did_load_filetypes = 0
