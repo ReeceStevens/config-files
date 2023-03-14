@@ -1,4 +1,6 @@
-" Typing preferences and asthetics
+" A drop-in vimrc file for running on servers where plugin configuration
+" and/or the user of neovim is not an option.
+
 colo slate
 set tabstop=4
 set shiftwidth=4
