@@ -208,8 +208,7 @@ Plug 'fisadev/vim-isort'
 Plug 'sainnhe/everforest'
 Plug 'NLKNguyen/papercolor-theme'
 
-Plug 'jceb/vim-orgmode'
-let g:org_agenda_files=['~/innolitics/notes/notes.org']
+Plug 'nvim-orgmode/orgmode'
 
 Plug 'github/copilot.vim'
 
@@ -224,16 +223,42 @@ lua << EOF
 -- Telescope config
 require('telescope').load_extension('fzf')
 
+-- Load custom treesitter grammar for org filetype
+require('orgmode').setup_ts_grammar()
+
 -- Treesitter config
 -- This is currently disabled to streamline performance.
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
   -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
   highlight = {
-    enable = false,              -- false will disable the whole extension
-    -- disable = { "c", "rust" },  -- list of language that will be disabled
+    enable = {'org', 'orgagenda'},              -- false will disable the whole extension
+    disable = { "c", "rust", "python", "typescript", "typescript.tsx", "yaml", "toml" },  -- list of language that will be disabled
+    -- Required for spellcheck, some LaTex highlights and
+    -- code block highlights that do not have ts grammar
+    additional_vim_regex_highlighting = {'org'},
   },
+  ensure_installed = {'org'}, -- Or run :TSUpdate org
 }
+
+require('orgmode').setup({
+  org_agenda_files = {"~/innolitics/notes/org-notes/*.org"},
+  org_default_notes_file = '~/innolitics/notes/org-notes/work.org',
+  org_todo_keywords = {'TODO', 'IN_PROGRESS', 'BLOCKED', 'DONE'},
+  org_capture_templates = {
+    t = { description = 'Task', template = '** TODO %?\n  %u' },
+    m = {
+      description = 'Meeting',
+      template = '** %?\n  %u\n\n*** Agenda\n\n\n*** Notes\n\n\n*** Action Items\n\n\n' }
+  },
+  org_indent_mode = "noindent",
+  org_todo_keyword_faces = {
+    TODO = ':foreground red', -- overrides builtin color for `TODO` keyword
+    IN_PROGRESS = ':foreground orange', -- overrides builtin color for `TODO` keyword
+    DONE = ':foreground green :weight bold', -- overrides builtin color for `TODO` keyword
+  },
+  calendar_week_start_day = 0,
+})
 
 -- Autocomplete configuration
 -- Note: Most of this is the default recommended config from the README
@@ -265,6 +290,7 @@ require'compe'.setup {
     calc = true;
     nvim_lsp = true;
     nvim_lua = true;
+    orgmode = true;
     -- vsnip = true;
     -- ultisnips = true;
     -- luasnip = true;
@@ -573,6 +599,10 @@ function! HaskellOptions()
     let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
     let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
 endfunction
+
+hi link OrgAgendaDeadline Error
+hi link OrgAgendaScheduled Function
+hi link OrgAgendaScheduledPast DiagnosticWarn
 
 au FileType java call JavaOptions()
 au FileType python call PythonOptions()
