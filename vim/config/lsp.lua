@@ -5,6 +5,10 @@
 -- This configuration was taken from the recommended config on the project
 -- README and then configured to match my preferred keybindings.
 
+
+-- Sets up appropriate autocompletion for neovim lua development
+require("neodev").setup({})
+
 local nvim_lsp = require('lspconfig')
 
 -- Use an on_attach function to only map the following keys
@@ -149,6 +153,15 @@ nvim_lsp.hls.setup {
 
 nvim_lsp.terraformls.setup{}
 
+nvim_lsp.lua_ls.setup({
+  settings = {
+    Lua = {
+      completion = {
+        callSnippet = "Replace"
+      }
+    }
+  }
+})
 
 -- Allow hiding of diagnostic messages
 vim.g.diagnostics_visible = true
