@@ -147,6 +147,9 @@ nvim_lsp.hls.setup {
     }
 }
 
+nvim_lsp.terraformls.setup{}
+
+
 -- Allow hiding of diagnostic messages
 vim.g.diagnostics_visible = true
 

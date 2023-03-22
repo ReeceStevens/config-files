@@ -56,6 +56,7 @@ au FileType java call JavaOptions()
 au FileType python call PythonOptions()
 au FileType gitcommit setlocal tw=72
 au FileType rust call RustOptions()
+au FileType terraform set filetype=hcl
 " Disabled since this causes major performance degredation editing markdown
 " au FileType markdown setlocal foldlevel=99
 au BufNewFile,BufRead,BufFilePre *.tex call LatexOptions()
