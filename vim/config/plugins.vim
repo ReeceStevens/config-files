@@ -108,6 +108,10 @@ Plug 'nvim-orgmode/orgmode'
 
 Plug 'github/copilot.vim'
 
+Plug 'mfussenegger/nvim-dap'
+Plug 'rcarriga/nvim-dap-ui'
+Plug 'mfussenegger/nvim-dap-python'
+
 Plug 'ReeceStevens/vim-reviewer'
 
 call plug#end()

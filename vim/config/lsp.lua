@@ -7,7 +7,9 @@
 
 
 -- Sets up appropriate autocompletion for neovim lua development
-require("neodev").setup({})
+require("neodev").setup({
+    library = { plugins = { "nvim-dap-ui" }, types = true },
+})
 
 local nvim_lsp = require('lspconfig')
 
