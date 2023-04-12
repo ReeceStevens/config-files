@@ -5,6 +5,7 @@
 -- This configuration was taken from the recommended config on the project
 -- README and then configured to match my preferred keybindings.
 
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- Sets up appropriate autocompletion for neovim lua development
 require("neodev").setup({
@@ -65,7 +66,8 @@ for _, lsp in ipairs(servers) do
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150,
-    }
+    },
+    capabilities = capabilities,
   }
 end
 
@@ -96,7 +98,8 @@ nvim_lsp.tsserver.setup {
         organize_imports,
         description = "Organize Imports"
       }
-    }
+    },
+    capabilities = capabilities,
 }
 
 nvim_lsp.diagnosticls.setup {
@@ -136,7 +139,8 @@ nvim_lsp.diagnosticls.setup {
             ["javascript.jsx"] = "eslint",
             ["typescript.tsx"] = "eslint",
         }
-    }
+    },
+    capabilities = capabilities,
 }
 
 nvim_lsp.arduino_language_server.setup {
@@ -144,16 +148,20 @@ nvim_lsp.arduino_language_server.setup {
     on_attach = on_attach,
     flags = {
       debounce_text_changes = 150,
-    }
+    },
+    capabilities = capabilities,
 }
 
 nvim_lsp.hls.setup {
     filetypes = {
         'haskell', 'lhaskell', 'cabal'
-    }
+    },
+    capabilities = capabilities,
 }
 
-nvim_lsp.terraformls.setup{}
+nvim_lsp.terraformls.setup{
+    capabilities = capabilities,
+}
 
 nvim_lsp.lua_ls.setup({
   settings = {
@@ -162,7 +170,8 @@ nvim_lsp.lua_ls.setup({
         callSnippet = "Replace"
       }
     }
-  }
+  },
+    capabilities = capabilities,
 })
 
 -- Allow hiding of diagnostic messages
