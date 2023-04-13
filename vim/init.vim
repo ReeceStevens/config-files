@@ -1,3 +1,6 @@
+" Use a controlled virtual environment for the host python
+let g:python3_host_prog = $HOME . '/.vim/python-virtual-env/nvim-venv/bin/python'
+
 colo molokai
 syntax on
 set mouse=a
@@ -11,10 +14,6 @@ set ignorecase
 set smartcase
 
 runtime config/text-config.vim
-
-" Use a controlled virtual environment for the host python
-let g:python3_host_prog = $HOME . '/.vim/python-virtual-env/nvim-venv/bin/python'
-
 runtime config/plugins.vim
 runtime config/keybindings.vim
 
