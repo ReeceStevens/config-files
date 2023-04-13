@@ -6,6 +6,7 @@ require('dapui').setup({
     }
 })
 require('dap-python').setup('~/.vim/python-virtual-env/nvim-venv/bin/python')
+require("nvim-dap-virtual-text").setup()
 
 -- map dap continue to leader dc
 vim.api.nvim_set_keymap('n', '<leader>dc', ':lua require"dap".continue()<CR>', {noremap = true, silent = true})
