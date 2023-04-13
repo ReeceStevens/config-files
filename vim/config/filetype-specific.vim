@@ -40,6 +40,7 @@ endfunction
 function! PythonOptions()
     " Run python scripts by pressing <F9>
     nnoremap <buffer> <F9> :exec '!python' shellescape(@%, 1)<cr>
+    nnoremap <buffer> <leader>dt :lua require('dap-python').test_method()<CR>
 endfunction
 
 function! HaskellOptions()
