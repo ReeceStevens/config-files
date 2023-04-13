@@ -1,5 +1,10 @@
 require('dap')
-require('dapui').setup()
+require('dapui').setup({
+    controls = {
+        element = "repl",
+        enabled = false,
+    }
+})
 require('dap-python').setup('~/.vim/python-virtual-env/nvim-venv/bin/python')
 
 -- map dap continue to leader dc
