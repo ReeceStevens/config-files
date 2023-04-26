@@ -50,15 +50,23 @@ cmp.setup {
                 fallback()
             end,
         }),
+        ['<C-g>'] = cmp.mapping(function()
+          vim.api.nvim_feedkeys(vim.fn['copilot#Accept'](
+              vim.api.nvim_replace_termcodes('<Tab>', true, true, true)
+          ), 'n', true)
+        end)
     }),
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
-        { name = 'vsnip' },
+        -- { name = 'vsnip' },
         { name = 'buffer' },
         { name = 'path' },
         { name = 'orgmode' },
         { name = 'dap' },
-    })
+    }),
+    experimental = {
+      ghost_text = false -- this feature conflict with copilot.vim's preview.
+    }
 }
 
 -- Completion for DAP repl shells
