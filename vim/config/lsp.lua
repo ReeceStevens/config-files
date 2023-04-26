@@ -103,6 +103,7 @@ nvim_lsp.tsserver.setup {
 }
 
 nvim_lsp.diagnosticls.setup {
+    on_attach = on_attach,
     filetypes = {"javascript", "javascript.jsx", "typescript", "typescript.tsx"},
     init_options = {
         linters = {
@@ -153,6 +154,7 @@ nvim_lsp.arduino_language_server.setup {
 }
 
 nvim_lsp.hls.setup {
+    on_attach = on_attach,
     filetypes = {
         'haskell', 'lhaskell', 'cabal'
     },
@@ -160,10 +162,12 @@ nvim_lsp.hls.setup {
 }
 
 nvim_lsp.terraformls.setup{
+    on_attach = on_attach,
     capabilities = capabilities,
 }
 
 nvim_lsp.lua_ls.setup({
+  on_attach = on_attach,
   settings = {
     Lua = {
       completion = {
