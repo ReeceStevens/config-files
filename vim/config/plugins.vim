@@ -126,6 +126,9 @@ Plug 'rcarriga/nvim-dap-ui'
 Plug 'mfussenegger/nvim-dap-python'
 " Plug 'theHamsta/nvim-dap-virtual-text'
 
+Plug 'pwntester/octo.nvim'
+Plug 'petertriho/cmp-git'
+
 Plug 'ReeceStevens/vim-reviewer'
 
 call plug#end()
@@ -150,5 +153,6 @@ require'nvim-treesitter.configs'.setup {
   ensure_installed = {'org'}, -- Or run :TSUpdate org
 }
 
+require'octo'.setup()
 
 EOF

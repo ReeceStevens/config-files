@@ -63,6 +63,7 @@ cmp.setup {
         { name = 'path' },
         { name = 'orgmode' },
         { name = 'dap' },
+        { name = 'git' },
     }),
     experimental = {
       ghost_text = false -- this feature conflict with copilot.vim's preview.
@@ -88,3 +89,5 @@ cmp.setup.cmdline(':', {
     { name = 'cmdline' }
   })
 })
+
+require'cmp_git'.setup()

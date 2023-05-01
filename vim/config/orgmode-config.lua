@@ -23,3 +23,5 @@ require('orgmode').setup({
 vim.api.nvim_set_hl(0, 'OrgAgendaDeadline', {link = 'Error'})
 vim.api.nvim_set_hl(0, 'OrgAgendaScheduled', {link = 'Function'})
 vim.api.nvim_set_hl(0, 'OrgAgendaScheduledPast', {link = 'DiagnosticWarn'})
+
+vim.api.nvim_set_hl(0, 'OctoEditable', {bg = "#1B1D1F"})
