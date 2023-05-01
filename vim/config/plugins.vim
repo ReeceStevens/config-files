@@ -120,6 +120,9 @@ let g:copilot_node_command = "~/.nodenv/versions/16.18.0/bin/node"
 " Tab mapping has been reset to <C-g> to prevent conflicts with autocomplete
 let g:copilot_no_tab_map = v:true
 imap <expr> <Plug>(vimrc:copilot-dummy-map) copilot#Accept("\<Tab>")
+let g:copilot_filetypes = {
+    \ 'dap-repl': v:false,
+\ }
 
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
