@@ -111,6 +111,11 @@ Plug 'psf/black', { 'branch': 'stable' }
 Plug 'fisadev/vim-isort'
 
 Plug 'sainnhe/everforest'
+    let g:everforest_background = 'hard'
+
+    " For better performance
+    let g:everforest_better_performance = 1
+
 Plug 'NLKNguyen/papercolor-theme'
 
 Plug 'nvim-orgmode/orgmode'

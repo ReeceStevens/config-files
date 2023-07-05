@@ -69,11 +69,11 @@ vnoremap <leader>gcl :Gclog <CR>
 let g:color_scheme = "dark"
 function! ToggleColors()
     if g:color_scheme == "dark"
-        let g:airline_theme='tomorrow'
         " colo solarized8_light_high
         set background=light
+        let g:airline_theme='everforest'
         colo everforest
-        let g:color_scheme = "solarized"
+        let g:color_scheme = "light"
     else
         let g:airline_theme='badwolf'
         set background=dark
