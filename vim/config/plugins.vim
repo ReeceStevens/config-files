@@ -127,7 +127,8 @@ let g:copilot_filetypes = {
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
 Plug 'mfussenegger/nvim-dap-python'
-" Plug 'theHamsta/nvim-dap-virtual-text'
+Plug 'David-Kunz/jester'
+Plug 'theHamsta/nvim-dap-virtual-text'
 
 Plug 'pwntester/octo.nvim'
 Plug 'petertriho/cmp-git'
