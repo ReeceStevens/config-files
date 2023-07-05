@@ -9,7 +9,7 @@ require('orgmode').setup({
     t = { description = 'Task', template = '** TODO %?\n  %u' },
     m = {
       description = 'Meeting',
-      template = '** %?\n  %u\n\n*** Agenda\n\n\n*** Notes\n\n\n*** Action Items\n\n\n' }
+      template = '** %?\n  %u\n\n*** Notes\n\n\n*** Action Items\n\n\n' }
   },
   org_indent_mode = "noindent",
   org_todo_keyword_faces = {
