@@ -229,3 +229,4 @@ function _G.toggle_diagnostics()
 end
 
 vim.api.nvim_buf_set_keymap(0, 'n', '<leader>h', ':call v:lua.toggle_diagnostics()<CR>', {silent=true, noremap=true})
+vim.api.nvim_buf_set_keymap(0, 'n', '<leader>Q', ':Telescope diagnostics<CR>', {silent=true, noremap=true})
