@@ -7,7 +7,7 @@ require('dapui').setup({
 })
 require('dap-python').setup('~/.vim/python-virtual-env/nvim-venv/bin/python')
 -- Disabling virtualtext since it seems to be interfering with copilot plugin
--- require("nvim-dap-virtual-text").setup()
+require("nvim-dap-virtual-text").setup()
 
 dap.adapters.firefox = {
   type = 'executable',
