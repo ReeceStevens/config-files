@@ -138,6 +138,9 @@ Plug 'theHamsta/nvim-dap-virtual-text'
 Plug 'pwntester/octo.nvim'
 Plug 'petertriho/cmp-git'
 
+Plug 'samjwill/nvim-unception'
+let g:unception_open_buffer_in_new_tab = v:true
+
 Plug 'ReeceStevens/vim-reviewer'
 
 call plug#end()
