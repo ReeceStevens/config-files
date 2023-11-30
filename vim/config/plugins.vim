@@ -99,7 +99,7 @@ Plug 'junegunn/vim-easy-align'
 
 " Telescope for file searching
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'nvim-telescope/telescope.nvim'
     " Find files using Telescope command-line sugar.
     " nnoremap <leader>ff <cmd>Telescope find_files<cr>
     nnoremap <leader>fg <cmd>Telescope live_grep<cr>
@@ -138,6 +138,7 @@ Plug 'jbyuki/one-small-step-for-vimkind'
 
 Plug 'pwntester/octo.nvim'
 Plug 'petertriho/cmp-git'
+Plug 'nvim-tree/nvim-web-devicons'
 
 Plug 'samjwill/nvim-unception'
 let g:unception_open_buffer_in_new_tab = v:true
@@ -168,5 +169,17 @@ require'nvim-treesitter.configs'.setup {
 }
 
 require'octo'.setup()
+vim.api.nvim_set_keymap('n', '<leader>gi', ':Octo issue search<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>gI', ':Octo issue create<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>gp', ':Octo pr search<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>gc', ':Octo comment add<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>gla', ':Octo label add<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>glr', ':Octo label remove<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>gb', ':Octo issue browser<CR>', { noremap = true, silent = true })
+
+
+require'nvim-web-devicons'.setup{
+default = true;
+}
 
 EOF
