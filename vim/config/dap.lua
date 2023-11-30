@@ -15,6 +15,17 @@ dap.adapters.firefox = {
   args = {os.getenv('HOME') .. '/.vim/vscode-firefox-debug/dist/adapter.bundle.js'},
 }
 
+dap.configurations.lua = {
+  {
+    type = 'nlua',
+    request = 'attach',
+    name = "Attach to running Neovim instance",
+  }
+}
+dap.adapters.nlua = function(callback, config)
+  callback({ type = 'server', host = config.host or "127.0.0.1", port = config.port or 8086 })
+end
+
 vim.api.nvim_set_keymap('n', '<leader>dc', ':lua require"dap".continue()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>db', ':lua require"dap".toggle_breakpoint()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>dB', ':lua require"dap".toggle_breakpoint(vim.fn.input(\'Breakpoint condition: \'))<CR>', {noremap = true, silent = true})
@@ -22,6 +33,7 @@ vim.api.nvim_set_keymap('n', '<leader>ds', ':lua require"dap".step_into()<CR>', 
 vim.api.nvim_set_keymap('n', '<leader>do', ':lua require"dap".step_over()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>di', ':lua require"dapui".toggle()<CR>', {noremap = true, silent = true})
 
+vim.api.nvim_set_keymap('n', '<leader>dv', ':lua require"osv".launch({port = 8086})<CR>', {noremap = true, silent = true})
 
 -- Example configuration for firefox debugging. Project-specific configurations should
 -- go in their local .nvimrc file.

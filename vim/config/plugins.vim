@@ -134,6 +134,7 @@ Plug 'rcarriga/nvim-dap-ui'
 Plug 'mfussenegger/nvim-dap-python'
 Plug 'David-Kunz/jester'
 Plug 'theHamsta/nvim-dap-virtual-text'
+Plug 'jbyuki/one-small-step-for-vimkind'
 
 Plug 'pwntester/octo.nvim'
 Plug 'petertriho/cmp-git'
