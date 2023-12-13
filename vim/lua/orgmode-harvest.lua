@@ -37,14 +37,17 @@ function HarvestClockReport.from_date_range(from, to)
     if #file_clocks.headlines > 0 then
       for _, headline in ipairs(file_clocks.headlines) do
           for _, log_item in ipairs(headline.logbook.items) do
-              table.insert(entries, {
-                  name = orgfile.category .. '.org',
-                  tags = headline.tags,
-                  title = headline.title,
-                  start_time = log_item.start_time,
-                  end_time = log_item.end_time,
-                  duration = log_item.duration,
-              })
+              -- If log entry date occurs within the from and to range, include it in the entries list
+              if log_item.start_time >= from and log_item.start_time <= to then
+                  table.insert(entries, {
+                      name = orgfile.category .. '.org',
+                      tags = headline.tags,
+                      title = headline.title,
+                      start_time = log_item.start_time,
+                      end_time = log_item.end_time,
+                      duration = log_item.duration,
+                  })
+              end
           end
       end
       total_duration = total_duration + file_clocks.total_duration.minutes
@@ -160,7 +163,43 @@ function HarvestClockReport:export_entry_to_harvest(entry)
     return response
 end
 
-function HarvestClockReport:export_to_harvest()
+function HarvestClockReport:export_entry_dry_run(entry)
+    local project_id, task_id =  HarvestClockReport.determine_entry_project_and_task(entry)
+    if project_id == nil or task_id == nil then
+        return {
+            error = "No project or task found for " .. entry.title,
+            spent_date = entry.start_time:format("%Y-%m-%d"),
+            started_time = entry.start_time:format("%I:%M%p"),
+            ended_time = entry.end_time:format_time("%I:%M%p"),
+            name = entry.name,
+            tags = entry.tags,
+        }
+    end
+    local post_body = {
+            project_id = project_id,
+            task_id = task_id,
+            spent_date = entry.start_time:format("%Y-%m-%d"),
+            started_time = entry.start_time:format("%I:%M%p"),
+            ended_time = entry.end_time:format_time("%I:%M%p"),
+            notes = entry.title:gsub("%[#[ABC]%] ", "")
+        }
+    return post_body
+end
+
+function HarvestClockReport:export_to_harvest(dry_run)
+  if dry_run == true then
+    local all_requests = {}
+    for _, entry in ipairs(self.entries) do
+      table.insert(all_requests, self:export_entry_dry_run(entry))
+    end
+    local bufnr = vim.fn.bufadd('harvest-export.json')
+    vim.fn.setbufvar(bufnr, "&filetype", "json")
+    vim.fn.bufload(bufnr)
+    vim.bo[bufnr].buflisted = true
+    vim.fn.setbufline(bufnr, 1, vim.fn.json_encode(all_requests))
+    return all_requests
+  end
+
   for _, entry in ipairs(self.entries) do
     HarvestClockReport.export_entry_to_harvest(self, entry)
   end
@@ -169,15 +208,33 @@ end
 
 -- TODO: print a table showing the entries that will be created
 -- TODO: future work: prevent duplicate time entries from being created
--- TODO: Add "Dry run" functionality to print out tasks that will be created before publishing to Harvest
--- TODO: Add custom date range arguments to harvest report export
 
--- TODO: Export works, but for some reason not all general tasks are working -- people management and operations in particular isn't working
-function _G.orgmode_harvest.harvestreport()
-    local report = HarvestClockReport.from_date_range(Date.today():adjust("-3d"), Date.today());
-    report:export_to_harvest()
-    return report;
+function _G.orgmode_harvest.harvest_export(dry_run, start_date_offset, end_date_offset)
+    local start = Date.now():adjust(start_date_offset):set({hour=0, min=0, sec=0})
+    local finish = Date.now():adjust(end_date_offset):set({hour=23, min=59, sec=59})
+    local report = HarvestClockReport.from_date_range(start, finish);
+    report:export_to_harvest(dry_run)
 end
+
+-- Define vim command to export to Harvest
+vim.api.nvim_create_user_command(
+    "HarvestExport",
+    function(opts)
+        local start_date_offset = opts.fargs[1] or '0d'
+        local end_date_offset = opts.fargs[2] or '0d'
+        orgmode_harvest.harvest_export(false, start_date_offset, end_date_offset)
+    end,
+    { nargs = "*" }
+)
+vim.api.nvim_create_user_command(
+    "HarvestDryRunExport",
+    function(opts)
+        local start_date_offset = opts.fargs[1] or '0d'
+        local end_date_offset = opts.fargs[2] or '0d'
+        orgmode_harvest.harvest_export(true, start_date_offset, end_date_offset)
+    end,
+    { nargs = "*" }
+)
 
 return {
     HarvestClockReport

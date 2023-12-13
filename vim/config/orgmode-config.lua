@@ -20,6 +20,9 @@ require('orgmode').setup({
   calendar_week_start_day = 0,
 })
 
+-- Custom lua plugin for exporting to Harvest
+require('orgmode-harvest')
+
 vim.api.nvim_set_hl(0, 'OrgAgendaDeadline', {link = 'Error'})
 vim.api.nvim_set_hl(0, 'OrgAgendaScheduled', {link = 'Function'})
 vim.api.nvim_set_hl(0, 'OrgAgendaScheduledPast', {link = 'DiagnosticWarn'})
