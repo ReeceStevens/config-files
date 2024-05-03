@@ -147,6 +147,7 @@ Plug 'samjwill/nvim-unception'
 let g:unception_open_buffer_in_new_tab = v:true
 
 Plug 'ReeceStevens/vim-reviewer'
+Plug 'j-hui/fidget.nvim'
 
 call plug#end()
 
@@ -155,15 +156,18 @@ lua << EOF
 -- Telescope config
 require('telescope').load_extension('fzf')
 
+-- LSP progress reports
+require("fidget").setup()
+
 -- Treesitter config
 -- This is currently disabled to streamline performance.
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
   -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
   highlight = {
-    enable = {'org', 'orgagenda'},              -- false will disable the whole extension
+    enable = {'org', 'orgagenda', 'markdown'},              -- false will disable the whole extension
     -- I am running into a bug with treesitter causing a freeze editing TSX files, so disabling highlighting there for now.
-    disable = { "c", "rust", "python", "tsx", "typescript", "yaml", "toml" },  -- list of language that will be disabled
+    disable = { "c", "rust", "python", "tsx", "typescript", "yaml", "toml", "typescript.tsx", "typescriptreact", "gitcommit" },  -- list of language that will be disabled
     -- Required for spellcheck, some LaTex highlights and
     -- code block highlights that do not have ts grammar
     additional_vim_regex_highlighting = {'org'},
