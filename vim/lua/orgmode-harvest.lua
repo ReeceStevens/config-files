@@ -4,9 +4,9 @@ require('orgmode')
 local curl = require('plenary.curl')
 
 local Files = require('orgmode.parser.files')
-local Table = require('orgmode.parser.table')
 local Duration = require('orgmode.objects.duration')
 local Date = require('orgmode.objects.date')
+local ClockReport = require('orgmode.clock.report')
 
 ---@class HarvestClockReport
 ---@field total_duration Duration
@@ -32,17 +32,24 @@ end
 function HarvestClockReport.from_date_range(from, to)
   local total_duration = 0
   local entries = {}
-  for _, orgfile in ipairs(Files.all()) do
-    local file_clocks = orgfile:get_clock_report(from, to)
+
+  local clock_report = ClockReport:new({
+    from = from,
+    to = to,
+    files = Files.loader(),
+  })
+
+  for _, orgfile in ipairs(clock_report.files:all()) do
+    local file_clocks = clock_report:_get_clock_report_for_file(orgfile)
     if #file_clocks.headlines > 0 then
       for _, headline in ipairs(file_clocks.headlines) do
-          for _, log_item in ipairs(headline.logbook.items) do
+          for _, log_item in ipairs(headline:get_logbook().items) do
               -- If log entry date occurs within the from and to range, include it in the entries list
               if log_item.start_time >= from and log_item.start_time <= to then
                   table.insert(entries, {
-                      name = orgfile.category .. '.org',
-                      tags = headline.tags,
-                      title = headline.title,
+                      name = orgfile:get_category() .. '.org',
+                      tags = headline:get_tags(),
+                      title = headline:get_title(),
                       start_time = log_item.start_time,
                       end_time = log_item.end_time,
                       duration = log_item.duration,
@@ -71,9 +78,7 @@ function HarvestClockReport:print_table(start_line)
   for _, entry in ipairs(self.entries) do
     table.insert(data, { entry.name, entry.title, entry.start_time, entry.end_time, entry.duration })
   end
-
   -- local clock_table = Table.from_list(data, start_line, 0):compile()
-
 end
 
 local credentials = vim.fn.json_decode(vim.fn.readblob("/Users/reecestevens/.vim/harvest-creds.json"))
@@ -104,6 +109,9 @@ local lookup_map = vim.fn.json_decode(vim.fn.readblob("/Users/reecestevens/.vim/
 -- end
 
 local function tag_exists_for_entry(tag, entry)
+    if entry.tags == nil then
+        return false
+    end
     for _, entry_tag in ipairs(entry.tags) do
         if entry_tag == tag then
             return true
@@ -194,6 +202,7 @@ function HarvestClockReport:export_to_harvest(dry_run)
   if dry_run == true then
     local all_requests = {}
     for _, entry in ipairs(self.entries) do
+      local check = entry.title
       table.insert(all_requests, self:export_entry_dry_run(entry))
     end
     local bufnr = vim.fn.bufadd('harvest-export.json')

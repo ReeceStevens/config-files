@@ -1,6 +1,3 @@
--- Load custom treesitter grammar for org filetype
-require('orgmode').setup_ts_grammar()
-
 require('orgmode').setup({
   org_agenda_files = {"~/innolitics/notes/org-notes/*.org", "~/innolitics/notes/org-notes/work/*.org"},
   org_default_notes_file = '~/innolitics/notes/org-notes/refile.org',
@@ -37,4 +34,4 @@ vim.api.nvim_create_autocmd(
         command = "setlocal conceallevel=1",
     }
 )
-vim.opt.conceallevel = 1
+-- vim.opt.conceallevel = 1
