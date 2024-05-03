@@ -125,6 +125,10 @@ function HarvestClockReport.determine_entry_project_and_task(entry)
             key = "management"
         elseif tag_exists_for_entry("ops", entry) then
             key = "ops"
+        elseif tag_exists_for_entry("sales", entry) then
+            key = "sales"
+        elseif tag_exists_for_entry("marketing", entry) then
+            key = "marketing"
         end
     end
 
