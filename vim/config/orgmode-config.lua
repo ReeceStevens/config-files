@@ -20,6 +20,7 @@ require('orgmode').setup({
 
 -- Custom lua plugin for exporting to Harvest
 require('orgmode-harvest')
+require('orgmode-backlinks')
 
 vim.api.nvim_set_hl(0, '@org.agenda.deadline', {link = 'Error'})
 vim.api.nvim_set_hl(0, '@org.agenda.scheduled', {link = 'Function'})
