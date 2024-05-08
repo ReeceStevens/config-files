@@ -9,6 +9,7 @@ require('orgmode').setup({
       template = '* %?\n  %u\n\n** Notes\n\n\n** Action Items\n\n\n' }
   },
   org_startup_indented = false,
+  org_adapt_indentation = false,
   org_todo_keyword_faces = {
     TODO = ':foreground red', -- overrides builtin color for `TODO` keyword
     IN_PROGRESS = ':foreground orange', -- overrides builtin color for `TODO` keyword
@@ -20,9 +21,9 @@ require('orgmode').setup({
 -- Custom lua plugin for exporting to Harvest
 require('orgmode-harvest')
 
-vim.api.nvim_set_hl(0, 'OrgAgendaDeadline', {link = 'Error'})
-vim.api.nvim_set_hl(0, 'OrgAgendaScheduled', {link = 'Function'})
-vim.api.nvim_set_hl(0, 'OrgAgendaScheduledPast', {link = 'DiagnosticWarn'})
+vim.api.nvim_set_hl(0, '@org.agenda.deadline', {link = 'Error'})
+vim.api.nvim_set_hl(0, '@org.agenda.scheduled', {link = 'Function'})
+vim.api.nvim_set_hl(0, '@org.agenda.scheduled_past', {link = 'DiagnosticWarn'})
 
 vim.api.nvim_set_hl(0, 'OctoEditable', {bg = "#1B1D1F"})
 
