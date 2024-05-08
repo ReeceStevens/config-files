@@ -149,6 +149,8 @@ let g:unception_open_buffer_in_new_tab = v:true
 Plug 'ReeceStevens/vim-reviewer'
 Plug 'j-hui/fidget.nvim'
 
+Plug 'ii14/neorepl.nvim'
+
 call plug#end()
 
 lua << EOF
