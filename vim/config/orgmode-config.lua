@@ -9,6 +9,7 @@ require('orgmode').setup({
       template = '* %?\n  %u\n\n** Notes\n\n\n** Action Items\n\n\n' }
   },
   org_startup_indented = false,
+  org_startup_folded = 'showeverything',
   org_adapt_indentation = false,
   org_todo_keyword_faces = {
     TODO = ':foreground red', -- overrides builtin color for `TODO` keyword
