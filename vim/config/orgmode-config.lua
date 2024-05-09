@@ -36,4 +36,19 @@ vim.api.nvim_create_autocmd(
         command = "setlocal conceallevel=1",
     }
 )
+
+vim.cmd [[highlight Headline1 guibg=#1e2718]]
+vim.cmd [[highlight Headline2 guibg=#21262d]]
+vim.cmd [[highlight CodeBlock guibg=#242424]]
+vim.cmd [[highlight Dash guibg=#D19A66 gui=bold]]
+
+require("headlines").setup {
+    org = {
+        headline_highlights = { "Headline1", "Headline2" },
+        codeblock_highlight = "CodeBlock",
+        fat_headlines = false,
+        bullets = {},
+    },
+}
+
 -- vim.opt.conceallevel = 1

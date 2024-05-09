@@ -150,6 +150,7 @@ Plug 'ReeceStevens/vim-reviewer'
 Plug 'j-hui/fidget.nvim'
 
 Plug 'ii14/neorepl.nvim'
+Plug 'lukas-reineke/headlines.nvim'
 
 call plug#end()
 
