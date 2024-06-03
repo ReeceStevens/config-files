@@ -197,7 +197,6 @@ default = true;
 }
 
 require'CopilotChat'.setup({
-    debug = true,
     show_help = "yes",
     prompts = {
         Explain = "Explain how it works.",
