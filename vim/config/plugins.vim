@@ -178,7 +178,11 @@ require'nvim-treesitter.configs'.setup {
   ensure_installed = {'org'}, -- Or run :TSUpdate org
 }
 
-require'octo'.setup()
+require'octo'.setup({
+  suppress_missing_scope = {
+    projects_v2 = true,
+  }
+})
 vim.api.nvim_set_keymap('n', '<leader>gi', ':Octo issue search<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>gI', ':Octo issue create<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>gp', ':Octo pr search<CR>', { noremap = true, silent = true })
