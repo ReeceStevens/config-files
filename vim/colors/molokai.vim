@@ -14,6 +14,9 @@ if version > 580
     " no guarantees for version 5.8 and below, but this makes it stop
     " complaining
     hi clear
+    if has('nvim-0.10')
+      runtime colors/vim.lua
+    endif
     if exists("syntax_on")
         syntax reset
     endif
@@ -25,7 +28,6 @@ if exists("g:molokai_original")
 else
     let s:molokai_original = 0
 endif
-
 
 hi Boolean         guifg=#AE81FF
 hi Character       guifg=#E6DB74
@@ -101,6 +103,7 @@ hi Type            guifg=#66D9EF               gui=none
 hi Underlined      guifg=#808080               gui=underline
 
 hi VertSplit       guifg=#808080 guibg=#080808 gui=bold
+hi WinSeparator    guifg=#808080 guibg=#080808 gui=bold
 hi VisualNOS                     guibg=#403D3D
 hi Visual                        guibg=#403D3D
 hi WarningMsg      guifg=#FFFFFF guibg=#333333 gui=bold
@@ -219,6 +222,7 @@ if &t_Co > 255
    hi Underlined      ctermfg=244               cterm=underline
 
    hi VertSplit       ctermfg=244 ctermbg=232   cterm=bold
+   hi WinSeparator       ctermfg=244 ctermbg=232   cterm=bold
    hi VisualNOS                   ctermbg=238
    hi Visual                      ctermbg=235
    hi WarningMsg      ctermfg=231 ctermbg=238   cterm=bold
