@@ -118,7 +118,8 @@ Plug 'sainnhe/everforest'
 
 Plug 'NLKNguyen/papercolor-theme'
 
-Plug 'nvim-orgmode/orgmode'
+Plug 'nvim-orgmode/orgmode', { 'branch': 'reece/clock-fixes' }
+Plug 'chipsenkbeil/org-roam.nvim'
 
 Plug 'github/copilot.vim'
 let g:copilot_node_command = "~/.nodenv/versions/20.11.0/bin/node"

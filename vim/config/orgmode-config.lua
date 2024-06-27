@@ -1,5 +1,5 @@
 require('orgmode').setup({
-  org_agenda_files = {"~/innolitics/notes/org-notes/*.org", "~/innolitics/notes/org-notes/work/*.org"},
+  org_agenda_files = {"~/innolitics/notes/org-notes/*.org", "~/innolitics/notes/org-notes/work/*.org", "~/innolitics/notes/org-notes/org-roam/**/*"},
   org_default_notes_file = '~/innolitics/notes/org-notes/refile.org',
   org_todo_keywords = {'TODO', 'IN_PROGRESS', 'BLOCKED', 'DONE'},
   org_capture_templates = {
@@ -17,6 +17,13 @@ require('orgmode').setup({
     DONE = ':foreground green :weight bold', -- overrides builtin color for `TODO` keyword
   },
   calendar_week_start_day = 0,
+})
+
+require("org-roam").setup({
+  directory = "~/innolitics/notes/org-notes/org-roam",
+  bindings = {
+    prefix = "<LocalLeader>n",
+  },
 })
 
 -- Custom lua plugin for exporting to Harvest
