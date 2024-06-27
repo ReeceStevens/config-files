@@ -93,6 +93,9 @@ Plug 'folke/neodev.nvim'
 " Fuzzy search
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
+nnoremap <leader>fg <cmd>FzfLua live_grep<cr>
+nnoremap <leader>fd <cmd>FzfLua diagnostics_workspace<cr>
 
 " Markdown table alignment
 Plug 'junegunn/vim-easy-align'
@@ -102,7 +105,7 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
     " Find files using Telescope command-line sugar.
     " nnoremap <leader>ff <cmd>Telescope find_files<cr>
-    nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+    " nnoremap <leader>fg <cmd>Telescope live_grep<cr>
     " nnoremap <leader>fb <cmd>Telescope buffers<cr>
     " nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
