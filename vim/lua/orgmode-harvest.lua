@@ -87,26 +87,123 @@ local harvest_account = credentials.account
 
 local lookup_map = vim.fn.json_decode(vim.fn.readblob("/Users/reecestevens/.vim/harvest-maps.json"))
 
+function HarvestClockReport.get_harvest_clients()
+  local clients_response = curl.get({
+      url = 'https://api.harvestapp.com/v2/clients',
+      raw = {'-H', 'Harvest-Account-ID: ' .. harvest_account, "-H", "Authorization: Bearer " .. harvest_token},
+  })
+  return vim.fn.json_decode(clients_response.body)
+end
 
--- TODO: Listing of projects and tasks isn't working due to Harvest permissions reasons-- seems like you need
--- admin permissions to even list projects and tasks.
--- function HarvestClockReport:get_harvest_projects()
---   local project_response = curl.get({
---       url = 'https://api.harvestapp.com/v2/projects',
---       raw = {'-H', 'Harvest-Account-ID: ' .. harvest_account, "-H", "Authorization: Bearer " .. harvest_token},
---   })
---   local projects = vim.fn.json_decode(project_response.body)
 
---   local task_response = curl.get({
---       url = 'https://api.harvestapp.com/v2/tasks',
---       raw = {'-H', 'Harvest-Account-ID: ' .. harvest_account, "-H", "Authorization: Bearer " .. harvest_token},
---   })
---   local tasks = vim.fn.json_decode(task_response.body)
---   return {
---       projects = projects,
---       tasks = tasks,
---   }
--- end
+function HarvestClockReport.get_harvest_projects(client_id)
+  local project_response = curl.get({
+      url = 'https://api.harvestapp.com/v2/projects?client_id=' .. client_id,
+      raw = {'-H', 'Harvest-Account-ID: ' .. harvest_account, "-H", "Authorization: Bearer " .. harvest_token},
+  })
+  return vim.fn.json_decode(project_response.body)
+end
+
+
+function HarvestClockReport.get_tasks_for_project(project_id)
+  local task_response = curl.get({
+      url = 'https://api.harvestapp.com/v2/projects/' .. project_id .. '/task_assignments',
+      raw = {'-H', 'Harvest-Account-ID: ' .. harvest_account, "-H", "Authorization: Bearer " .. harvest_token},
+  })
+  return vim.fn.json_decode(task_response.body)
+end
+
+
+local pickers = require "telescope.pickers"
+local finders = require "telescope.finders"
+local conf = require("telescope.config").values
+local actions = require "telescope.actions"
+local action_state = require "telescope.actions.state"
+
+local task_picker = function(project_id, opts)
+    local tasks = HarvestClockReport.get_tasks_for_project(project_id)
+    opts = opts or {}
+    pickers.new(opts, {
+        prompt_title = "Select Harvest Task for project " .. project_id,
+        finder = finders.new_table {
+            results = tasks["task_assignments"],
+            entry_maker = function(entry)
+                return {
+                    value = entry["task"]["id"],
+                    display = entry["task"]["name"],
+                    ordinal = entry["task"]["name"],
+                }
+            end
+        },
+        sorter = conf.generic_sorter(opts),
+        attach_mappings = function(prompt_bufnr, map)
+          actions.select_default:replace(function()
+            actions.close(prompt_bufnr)
+            local selection = action_state.get_selected_entry()
+            print(vim.inspect(selection))
+            vim.api.nvim_put({ "{ \"project_id\": \"" .. project_id .. "\", \"task_id\": \"" .. selection.value .. "\" }" }, "", false, true)
+          end)
+          return true
+        end,
+  }):find()
+end
+
+local project_picker = function(client_id, opts)
+    local projects = HarvestClockReport.get_harvest_projects(client_id)
+    opts = opts or {}
+    pickers.new(opts, {
+        prompt_title = "Select Harvest Project for client " .. client_id,
+        finder = finders.new_table {
+            results = projects["projects"],
+            entry_maker = function(entry)
+                return {
+                    value = entry["id"],
+                    display = entry["name"],
+                    ordinal = entry["name"],
+                }
+            end
+        },
+        sorter = conf.generic_sorter(opts),
+        attach_mappings = function(prompt_bufnr, map)
+          actions.select_default:replace(function()
+            actions.close(prompt_bufnr)
+            local selection = action_state.get_selected_entry()
+            task_picker(selection.value)
+          end)
+          return true
+        end,
+  }):find()
+end
+
+
+
+local client_picker = function(opts)
+  local clients = HarvestClockReport.get_harvest_clients()
+  opts = opts or {}
+  local result = pickers.new(opts, {
+    prompt_title = "Select Harvest Client",
+    finder = finders.new_table {
+      results = clients["clients"],
+      entry_maker = function(entry)
+        return {
+          value = entry["id"],
+          display = entry["name"],
+          ordinal = entry["name"],
+        }
+      end
+    },
+    sorter = conf.generic_sorter(opts),
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(function()
+        actions.close(prompt_bufnr)
+        local selection = action_state.get_selected_entry()
+        project_picker(selection.value)
+      end)
+      return true
+    end,
+  }):find()
+end
+
 
 local function tag_exists_for_entry(tag, entry)
     if entry.tags == nil then
@@ -126,7 +223,7 @@ function HarvestClockReport.determine_entry_project_and_task(entry)
         key = "aimetrics"
     elseif entry.name == "huxley.org" then
         key = "huxley"
-    elseif entry.name == "general.org" then
+    else
         if tag_exists_for_entry("10x", entry) then
             key = "10x-time"
         elseif tag_exists_for_entry("management", entry) then
@@ -218,7 +315,6 @@ function HarvestClockReport:export_to_harvest(dry_run)
   end
 end
 
-
 -- TODO: print a table showing the entries that will be created
 -- TODO: future work: prevent duplicate time entries from being created
 
@@ -248,6 +344,15 @@ vim.api.nvim_create_user_command(
     end,
     { nargs = "*" }
 )
+
+vim.api.nvim_create_user_command(
+    "HarvestAddProject",
+    function(opts)
+        client_picker()
+    end,
+    { nargs = 0 }
+)
+
 
 return {
     HarvestClockReport
