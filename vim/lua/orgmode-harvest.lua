@@ -234,16 +234,15 @@ function HarvestClockReport.determine_entry_project_and_task(entry)
     elseif entry.name == "huxley.org" then
         key = "huxley"
     else
-        if tag_exists_for_entry("10x", entry) then
-            key = "10x-time"
-        elseif tag_exists_for_entry("management", entry) then
-            key = "management"
-        elseif tag_exists_for_entry("ops", entry) then
-            key = "ops"
-        elseif tag_exists_for_entry("sales", entry) then
-            key = "sales"
-        elseif tag_exists_for_entry("marketing", entry) then
-            key = "marketing"
+        if entry.tags == nil then
+            print("No project found for " .. entry.name)
+            return nil, nil
+        end
+        for _, entry_tag in ipairs(entry.tags) do
+            if lookup_map[entry_tag] ~= nil then
+                key = entry_tag
+                break
+            end
         end
     end
 
