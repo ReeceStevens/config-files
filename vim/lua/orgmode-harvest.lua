@@ -140,8 +140,18 @@ local task_picker = function(project_id, opts)
           actions.select_default:replace(function()
             actions.close(prompt_bufnr)
             local selection = action_state.get_selected_entry()
-            print(vim.inspect(selection))
-            vim.api.nvim_put({ "{ \"project_id\": \"" .. project_id .. "\", \"task_id\": \"" .. selection.value .. "\" }" }, "", false, true)
+
+            -- Now that the project and task are selected, bind them to a tag
+            -- and insert them into the harvest project map
+            local harvest_map = vim.fn.json_decode(vim.fn.readblob("/Users/reecestevens/.vim/harvest-maps.json"))
+            local tag = vim.fn.input("Enter a tag for this project and task: ")
+            if harvest_map[tag] == nil then
+                harvest_map[tag] = { project_id = ""..project_id, task_id = ""..selection.value }
+            else
+                print("Tag already exists in harvest map")
+                return
+            end
+            vim.fn.writefile({ vim.fn.json_encode(harvest_map) }, "/Users/reecestevens/.vim/harvest-maps.json")
           end)
           return true
         end,
