@@ -49,13 +49,15 @@ vim.cmd [[highlight Headline2 guibg=#21262d]]
 vim.cmd [[highlight CodeBlock guibg=#242424]]
 vim.cmd [[highlight Dash guibg=#D19A66 gui=bold]]
 
-require("headlines").setup {
-    org = {
-        headline_highlights = { "Headline1", "Headline2" },
-        codeblock_highlight = "CodeBlock",
-        fat_headlines = false,
-        bullets = {},
-    },
-}
+-- `headlines` is disabled due to significant performance issues
+-- when viewing and editing large org files
+-- require("headlines").setup {
+--     org = {
+--         headline_highlights = { "Headline1", "Headline2" },
+--         codeblock_highlight = "CodeBlock",
+--         fat_headlines = false,
+--         bullets = {},
+--     },
+-- }
 
 -- vim.opt.conceallevel = 1
