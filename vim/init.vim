@@ -19,7 +19,7 @@ runtime config/keybindings.vim
 
 runtime config/lsp.lua
 runtime config/orgmode-config.lua
-runtime config/autocomplete.lua
+" runtime config/autocomplete.lua
 runtime config/dap.lua
 
 runtime config/local-config.lua
