@@ -135,6 +135,14 @@ let g:copilot_filetypes = {
 
 Plug 'CopilotC-Nvim/CopilotChat.nvim'
 
+" Avante setup (cursor-like LLM integration)
+Plug 'stevearc/dressing.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'MunifTanjim/nui.nvim'
+Plug 'HakonHarnes/img-clip.nvim'
+Plug 'MeanderingProgrammer/render-markdown.nvim'
+Plug 'yetone/avante.nvim', { 'branch': 'main', 'do': 'make' }
+
 Plug 'mfussenegger/nvim-dap'
 Plug 'nvim-neotest/nvim-nio'
 Plug 'rcarriga/nvim-dap-ui'
@@ -217,6 +225,26 @@ require'CopilotChat'.setup({
     end,
     event = "VeryLazy",
 })
+
+require('img-clip').setup({
+    default = {
+      embed_image_as_base64 = false,
+      prompt_for_file_name = false,
+      drag_and_drop = {
+        insert_mode = true,
+      },
+      use_absolute_path = true,
+    },
+})
+-- Only use render-markdown for Avante buffers, not markdown buffers.
+-- The highlights are useful for Avante but make general markdown buffers
+-- too visually noisy.
+require('render-markdown').setup({
+    file_types = {'Avante'},
+})
+require('avante_lib').load()
+require('avante').setup()
+
 
 -- Configure profiler for performance monitoring, if enabled with env var
 local function toggle_profile()
