@@ -1,5 +1,10 @@
 require('orgmode').setup({
-  org_agenda_files = {"~/innolitics/notes/org-notes/*.org", "~/innolitics/notes/org-notes/work/*.org", "~/innolitics/notes/org-notes/org-roam/**/*"},
+  org_agenda_files = {
+    "~/innolitics/notes/org-notes/*.org",
+    "~/innolitics/notes/org-notes/work/*.org",
+    "~/innolitics/notes/org-notes/org-roam/**/*",
+    "~/innolitics/notes/org-notes/work/management/*.org",
+  },
   org_default_notes_file = '~/innolitics/notes/org-notes/refile.org',
   org_todo_keywords = {'TODO', 'IN_PROGRESS', 'BLOCKED', 'DONE'},
   org_capture_templates = {
