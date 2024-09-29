@@ -14,15 +14,16 @@ set ignorecase
 set smartcase
 
 runtime config/text-config.vim
-runtime config/plugins.vim
+runtime lua/plugins.lua
+" runtime config/plugins.vim
 runtime config/keybindings.vim
 
-runtime config/lsp.lua
-runtime config/orgmode-config.lua
+" runtime config/lsp.lua
+" runtime config/orgmode-config.lua
 " runtime config/autocomplete.lua
-runtime config/dap.lua
+" runtime config/dap.lua
 
-runtime config/local-config.lua
+runtime lua/local-config.lua
 
 let g:do_filetype_lua = 1
 let g:did_load_filetypes = 0

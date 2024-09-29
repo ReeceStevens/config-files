@@ -12,7 +12,8 @@ return {
       "rcarriga/cmp-dap",
       "petertriho/cmp-git",
     },
-    config = function(cmp)
+    config = function()
+        local cmp = require('cmp')
         cmp.setup {
             snippet = {
                 expand = function(args)
