@@ -23,8 +23,7 @@ vim.g.maplocalleader = ","
 
 -- Start setup
 require("lazy").setup({
-  -- automatically check for plugin updates
-  checker = { enabled = true },
+  install = { colorscheme = {"molokai"} },
   spec = {
       -- General Plugins
       {
