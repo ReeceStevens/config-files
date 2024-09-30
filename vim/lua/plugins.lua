@@ -71,6 +71,7 @@ require("lazy").setup({
         keys = {
           { "<leader>5", "<cmd>Git blame<CR>", desc = "Git blame" },
         },
+        lazy = false,
         dependencies = {
           "tpope/vim-rhubarb",
         },
