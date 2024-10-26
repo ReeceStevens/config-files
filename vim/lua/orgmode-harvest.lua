@@ -1,9 +1,8 @@
 _G.orgmode_harvest = _G.orgmode_harvest or {}
 
-require('orgmode')
+local orgmode = require('orgmode')
 local curl = require('plenary.curl')
 
-local Files = require('orgmode.parser.files')
 local Duration = require('orgmode.objects.duration')
 local Date = require('orgmode.objects.date')
 local ClockReport = require('orgmode.clock.report')
@@ -36,7 +35,7 @@ function HarvestClockReport.from_date_range(from, to)
   local clock_report = ClockReport:new({
     from = from,
     to = to,
-    files = Files.loader(),
+    files = orgmode.files,
   })
 
   for _, orgfile in ipairs(clock_report.files:all()) do

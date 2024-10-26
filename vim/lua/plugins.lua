@@ -528,6 +528,7 @@ require("lazy").setup({
       -- Avante setup (cursor-like LLM integration)
       {
         "yetone/avante.nvim",
+        event = "VeryLazy",
         branch = "main",
         build = "make",
         config = function()
@@ -535,11 +536,12 @@ require("lazy").setup({
           require('avante').setup()
         end,
         dependencies = {
-              { "nvim-lua/plenary.nvim"},
-              { "stevearc/dressing.nvim" },
-              { "MunifTanjim/nui.nvim" },
+              "nvim-lua/plenary.nvim",
+              "stevearc/dressing.nvim",
+              "MunifTanjim/nui.nvim",
               {
                 "HakonHarnes/img-clip.nvim",
+                event = "VeryLazy",
                 opts = {
                   default = {
                     embed_image_as_base64 = false,
@@ -556,6 +558,7 @@ require("lazy").setup({
                 opts = {
                   file_types = {'Avante'},
                 },
+                ft = "Avante",
               },
         }
       },
