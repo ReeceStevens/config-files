@@ -431,9 +431,8 @@ require("lazy").setup({
       { "NLKNguyen/papercolor-theme" },
 
       {
-          "reecestevens/orgmode",
+          "nvim-orgmode/orgmode",
           ft = "org",
-          branch = "clock-fixes",
           config = function()
               local orgmode = require('orgmode')
               orgmode.setup({
