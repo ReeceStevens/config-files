@@ -590,7 +590,7 @@ require("lazy").setup({
             local dap = require('dap')
             dap.adapters.firefox = {
               type = 'executable',
-              command = '/Users/reecestevens/.nodenv/versions/16.13.2/bin/node',
+              command = 'node',
               args = {os.getenv('HOME') .. '/.vim/vscode-firefox-debug/dist/adapter.bundle.js'},
             }
 
