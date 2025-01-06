@@ -281,48 +281,6 @@ require("lazy").setup({
                 capabilities = capabilities,
             }
 
-            nvim_lsp.diagnosticls.setup {
-                on_attach = on_attach,
-                filetypes = {"javascript", "javascript.jsx", "typescript", "typescript.tsx"},
-                init_options = {
-                    linters = {
-                        eslint = {
-                            command = "./node_modules/.bin/eslint",
-                            rootPatterns = {".eslintrc.js"},
-                            debounce = 100,
-                            args = {
-                                "--stdin",
-                                "--stdin-filename",
-                                "%filepath",
-                                "--format",
-                                "json"
-                            },
-                            sourceName = "eslint",
-                            parseJson = {
-                                errorsRoot = "[0].messages",
-                                line = "line",
-                                column = "column",
-                                endLine = "endLine",
-                                endColumn = "endColumn",
-                                message = "${message} [${ruleId}]",
-                                security = "severity"
-                            },
-                            securities = {
-                                [2] = "error",
-                                [1] = "warning"
-                            }
-                        },
-                    },
-                    filetypes = {
-                        javascript = "eslint",
-                        typescript = "eslint",
-                        ["javascript.jsx"] = "eslint",
-                        ["typescript.tsx"] = "eslint",
-                    }
-                },
-                capabilities = capabilities,
-            }
-
             nvim_lsp.arduino_language_server.setup {
                 cmd = {"arduino-language-server", "-cli-config", "/Users/reecestevens/.arduino15/arduino-cli.yaml", "-clangd", "/usr/bin/clangd", "-fqbn", "adafruit:nrf52:feather52840" },
                 on_attach = on_attach,
