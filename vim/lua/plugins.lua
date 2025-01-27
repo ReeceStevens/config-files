@@ -400,6 +400,39 @@ require("lazy").setup({
                     "~/innolitics/notes/org-notes/org-roam/**/*",
                     "~/innolitics/notes/org-notes/work/management/*.org",
                   },
+                 org_agenda_custom_commands = {
+                    u = {
+                      description = 'Tasks that are not scheduled',
+                      types = {
+                        {
+                          type = 'tags',
+                          org_agenda_overriding_header = 'Unscheduled tasks',
+                          org_agenda_todo_ignore_scheduled = 'all',
+                          match = "+TODO=\"TODO\"|+TODO=\"IN_PROGRESS\"|+TODO=\"BLOCKED\""
+                        }
+                      }
+                    },
+                    w = {
+                        description = "Work Tasks",
+                        types = {
+                            {
+                                type = "agenda",
+                                org_agenda_overriding_header = "Work Tasks",
+                                org_agenda_tag_filter_preset = "-life|-freepulse"
+                            }
+                        }
+                    },
+                    l = {
+                        description = "Life Tasks",
+                        types = {
+                            {
+                                type = "agenda",
+                                org_agenda_overriding_header = "Work Tasks",
+                                org_agenda_tag_filter_preset = "+life"
+                            }
+                        }
+                    }
+                  },
                   org_default_notes_file = '~/innolitics/notes/org-notes/refile.org',
                   org_todo_keywords = {'TODO', 'IN_PROGRESS', 'BLOCKED', 'DONE'},
                   org_capture_templates = {
