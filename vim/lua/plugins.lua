@@ -418,7 +418,7 @@ require("lazy").setup({
                             {
                                 type = "agenda",
                                 org_agenda_overriding_header = "Work Tasks",
-                                org_agenda_tag_filter_preset = "-life|-freepulse"
+                                org_agenda_tag_filter_preset = "-life-freepulse"
                             }
                         }
                     },
