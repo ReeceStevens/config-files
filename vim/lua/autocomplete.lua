@@ -11,6 +11,8 @@ return {
       "hrsh7th/vim-vsnip",
       "rcarriga/cmp-dap",
       "petertriho/cmp-git",
+      "tailwind-tools",
+      "onsails/lspkind-nvim",
     },
     config = function()
         local cmp = require('cmp')
@@ -80,7 +82,12 @@ return {
             }),
             experimental = {
               ghost_text = false -- this feature conflict with copilot.vim's preview.
-            }
+            },
+            formatting = {
+              format = require("lspkind").cmp_format({
+                before = require("tailwind-tools.cmp").lspkind_format
+              }),
+            },
         }
 
         -- Completion for DAP repl shells

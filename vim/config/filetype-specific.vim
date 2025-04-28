@@ -62,7 +62,7 @@ au FileType octo set number
 " au FileType markdown setlocal foldlevel=99
 au BufNewFile,BufRead,BufFilePre *.tex call LatexOptions()
 au BufNewFile,BufFilePre,BufRead *.md call MarkdownOptions()
-au BufNewFile,BufFilePre,BufRead *.tsx set filetype=typescript.tsx
+au BufNewFile,BufFilePre,BufRead *.tsx set filetype=typescriptreact
 au BufNewFile,BufFilePre,BufRead *.jsx set filetype=javascript.jsx
 au BufNewFile,BufFilePre,BufRead *.hs setlocal omnifunc=necoghc#omnifunc
 au BufNewFile,BufFilePre,BufRead Jenkinsfile set filetype=groovy

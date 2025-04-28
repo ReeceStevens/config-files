@@ -315,6 +315,13 @@ require("lazy").setup({
                 capabilities = capabilities,
             })
 
+            -- Disabling for now
+            -- nvim_lsp.omnisharp.setup {
+            --     cmd = { "dotnet", "/Users/reecestevens/bin/omnisharp-osx-arm64-net6.0/OmniSharp.dll" },
+            --     on_attach = on_attach,
+            --     capabilities = capabilities,
+            -- }
+
             -- Allow hiding of diagnostic messages
             vim.g.diagnostics_visible = true
 
@@ -342,6 +349,22 @@ require("lazy").setup({
             vim.api.nvim_buf_set_keymap(0, 'n', '<leader>h', ':call v:lua.toggle_diagnostics()<CR>', {silent=true, noremap=true})
             vim.api.nvim_buf_set_keymap(0, 'n', '<leader>Q', ':Telescope diagnostics<CR>', {silent=true, noremap=true})
         end
+      },
+
+      {
+        "luckasRanarison/tailwind-tools.nvim",
+        name = "tailwind-tools",
+        build = ":UpdateRemotePlugins",
+        dependencies = {
+          "nvim-treesitter/nvim-treesitter",
+          "nvim-telescope/telescope.nvim",
+          "neovim/nvim-lspconfig",
+        },
+        opts = {
+            document_color = {
+                kind = "background"
+            },
+        }
       },
 
       -- Fuzzy search
