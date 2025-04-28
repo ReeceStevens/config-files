@@ -711,11 +711,9 @@ require("lazy").setup({
 -- Treesitter config
 require'nvim-treesitter.configs'.setup {
   highlight = {
-    enable = {'org', 'orgagenda', 'markdown'},
+    enable = {'markdown'},
     disable = { "c", "rust", "python", "tsx", "typescript", "yaml", "toml", "typescript.tsx", "typescriptreact", "gitcommit" },
-    additional_vim_regex_highlighting = {'org'},
   },
-  ensure_installed = {'org'},
 }
 
 -- Copilot Chat default keybindings

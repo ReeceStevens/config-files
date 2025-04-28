@@ -1,7 +1,12 @@
 " Use a controlled virtual environment for the host python
 let g:python3_host_prog = $HOME . '/.vim/python-virtual-env/nvim-venv/bin/python'
 
+
 colo molokai
+
+" Correct some highlighting issues with vim-airline
+hi StatusLine gui=NONE
+
 syntax on
 set mouse=a
 set laststatus=2
