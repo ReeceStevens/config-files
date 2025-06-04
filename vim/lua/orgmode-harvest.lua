@@ -150,6 +150,12 @@ local task_picker = function(project_id, opts)
                 print("Tag already exists in harvest map")
                 return
             end
+
+            -- Finally, specify an optional refile location
+            local refile_location = vim.fn.input("Enter an optional refile location for this tag (leave empty to skip): ")
+            if refile_location ~= "" then
+                harvest_map[tag].refile= refile_location
+            end
             vim.fn.writefile({ vim.fn.json_encode(harvest_map) }, "/Users/reecestevens/.vim/harvest-maps.json")
           end)
           return true
