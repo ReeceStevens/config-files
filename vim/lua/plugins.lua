@@ -416,6 +416,22 @@ require("lazy").setup({
           ft = "org",
           config = function()
               local orgmode = require('orgmode')
+
+              -- Custom hyperlink handler for opening emails in Mail
+              local LinkOpenType = {}
+              function LinkOpenType:get_name()
+                  return "message"
+              end
+
+              function LinkOpenType:follow(link)
+                if not vim.startswith(link, "message:") then
+                  return false
+                else
+                  vim.fn.system({"open", link})
+                end
+              end
+
+
               orgmode.setup({
                 org_agenda_files = {
                     "~/innolitics/notes/org-notes/*.org",
@@ -473,6 +489,11 @@ require("lazy").setup({
                     DONE = ':foreground green :weight bold', -- overrides builtin color for `TODO` keyword
                   },
                   calendar_week_start_day = 0,
+                  hyperlinks = {
+                    sources = {
+                        LinkOpenType,
+                    },
+                  },
               })
               -- Custom lua plugin for exporting to Harvest
               require('orgmode-harvest')
