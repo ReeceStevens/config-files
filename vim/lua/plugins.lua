@@ -21,9 +21,14 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = ","
 vim.g.maplocalleader = ","
 
+vim.diagnostic.config({
+   -- virtual_lines = true,
+   virtual_text = true,
+})
+
 -- Start setup
 require("lazy").setup({
-  install = { colorscheme = {"molokai"} },
+  install = { colorscheme = {"molokai-new"} },
   spec = {
       -- General Plugins
       {
@@ -170,7 +175,7 @@ require("lazy").setup({
         "neovim/nvim-lspconfig",
         dependencies = {
           "nvim-treesitter/nvim-treesitter",
-          {"folke/neodev.nvim", opts = { library = { plugins = { "nvim-dap-ui" }, types = true } } }
+          {"folke/neodev.nvim", opts = { library = { plugins = { "nvim-dap-ui" }, types = true } } },
         },
         config = function()
             local nvim_lsp = require('lspconfig')
@@ -349,6 +354,17 @@ require("lazy").setup({
             vim.api.nvim_buf_set_keymap(0, 'n', '<leader>h', ':call v:lua.toggle_diagnostics()<CR>', {silent=true, noremap=true})
             vim.api.nvim_buf_set_keymap(0, 'n', '<leader>Q', ':Telescope diagnostics<CR>', {silent=true, noremap=true})
         end
+      },
+
+      {
+        "folke/snacks.nvim",
+        opts = {
+            bigfile = {},
+            image = {},
+            indent = {
+                animate = { enabled = false },
+            }
+        }
       },
 
       {
@@ -565,10 +581,19 @@ require("lazy").setup({
         event = "VeryLazy",
         branch = "main",
         build = "make",
-        config = function()
-          require('avante_lib').load()
-          require('avante').setup()
-        end,
+        opts = {
+          provider = "claude",
+          providers = {
+            claude = {
+              endpoint = "https://api.anthropic.com",
+              model = "claude-sonnet-4-20250514",
+              extra_request_body = {
+                temperature = 0,
+                max_tokens = 64000,
+              },
+            },
+          },
+        },
         dependencies = {
               "nvim-lua/plenary.nvim",
               "stevearc/dressing.nvim",
@@ -596,6 +621,44 @@ require("lazy").setup({
               },
         }
       },
+
+      {
+         "olimorris/codecompanion.nvim",
+         event = "VeryLazy",
+         opts = {
+             strategies = {
+                chat = {
+                  adapter = "anthropic",
+                  slash_commands = {
+                    opts = {
+                        provider = "telescope"
+                    }
+                  }
+                },
+                inline = {
+                  adapter = "anthropic",
+                },
+             },
+             display = {
+                 action_palette = {
+                     provider = "telescope",
+                },
+            },
+         },
+         dependencies = {
+           "nvim-lua/plenary.nvim",
+           "nvim-treesitter/nvim-treesitter",
+            -- {
+            --   "MeanderingProgrammer/render-markdown.nvim",
+            --   opts = {
+            --     file_types = {'codecompanion'},
+            --   },
+            --   ft = "codecompanion",
+            -- },
+         },
+      },
+
+
 
       -- Debugging
       {

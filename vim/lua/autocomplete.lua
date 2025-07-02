@@ -79,6 +79,7 @@ return {
                 { name = 'orgmode' },
                 { name = 'dap' },
                 { name = 'git' },
+                { name = "codecompanion" },
             }),
             experimental = {
               ghost_text = false -- this feature conflict with copilot.vim's preview.
@@ -98,6 +99,16 @@ return {
             { name = "dap" },
           },
         }
+        })
+
+        cmp.setup.filetype('codecompanion', {
+          sources = cmp.config.sources({
+            { name = 'codecompanion' },
+            { name = 'buffer' },
+          }),
+          completion = {
+            autocomplete = { require('cmp.types').cmp.TriggerEvent.TextChanged },
+          },
         })
 
         -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
