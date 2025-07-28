@@ -361,9 +361,6 @@ require("lazy").setup({
         opts = {
             bigfile = {},
             image = {},
-            indent = {
-                animate = { enabled = false },
-            }
         }
       },
 
@@ -753,6 +750,16 @@ require("lazy").setup({
         end,
       },
 
+      {
+         "amitds1997/remote-nvim.nvim",
+         dependencies = {
+             "nvim-lua/plenary.nvim", -- For standard functions
+             "MunifTanjim/nui.nvim", -- To build the plugin UI
+             "nvim-telescope/telescope.nvim", -- For picking b/w different remote methods
+         },
+         config = true,
+      },
+
       { "ii14/neorepl.nvim" },
 
       {
@@ -800,9 +807,12 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 
+vim.api.nvim_set_keymap('n', '<leader>cc', '<cmd>CodeCompanionChat Toggle<cr>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>ca', '<cmd>CodeCompanionActions<cr>', { noremap = true, silent = true })
+
 -- Copilot Chat default keybindings
-vim.api.nvim_set_keymap('n', '<leader>ccb', '<cmd>CopilotChatBuffer<cr>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>cce', '<cmd>CopilotChatExplain<cr>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>cct', '<cmd>CopilotChatTests<cr>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('x', '<leader>ccv', ':CopilotChatVisual<cr>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('x', '<leader>ccx', ':CopilotChatInPlace<cr>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<leader>ccb', '<cmd>CopilotChatBuffer<cr>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<leader>cce', '<cmd>CopilotChatExplain<cr>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<leader>cct', '<cmd>CopilotChatTests<cr>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('x', '<leader>ccv', ':CopilotChatVisual<cr>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('x', '<leader>ccx', ':CopilotChatInPlace<cr>', { noremap = true, silent = true })
