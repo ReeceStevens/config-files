@@ -26,7 +26,6 @@ vim.diagnostic.config({
    virtual_text = true,
 })
 
--- Start setup
 require("lazy").setup({
   install = { colorscheme = {"molokai-new"} },
   spec = {
@@ -226,7 +225,7 @@ require("lazy").setup({
             -- Use a loop to conveniently call 'setup' on multiple servers and
             -- map buffer local keybindings when the language server attaches
             -- local servers = { "pyright", "rust_analyzer", "tsserver" }
-            local servers = { "rust_analyzer", "svelte", "clangd", "ruff", "openscad_lsp"}
+            local servers = { "rust_analyzer", "svelte", "clangd", "ruff", "openscad_lsp", "neocmake" }
             for _, lsp in ipairs(servers) do
               nvim_lsp[lsp].setup {
                 on_attach = on_attach,
@@ -543,120 +542,6 @@ require("lazy").setup({
           }
       },
 
-      {
-        "github/copilot.vim",
-        config = function()
-          vim.g.copilot_node_command = "~/.nodenv/versions/20.11.0/bin/node"
-          vim.g.copilot_no_tab_map = true
-          vim.cmd([[imap <expr> <Plug>(vimrc:copilot-dummy-map) copilot#Accept("\<Tab>")]])
-          vim.g.copilot_filetypes = {
-            ['dap-repl'] = false,
-          }
-        end,
-      },
-
-      {
-        "CopilotC-Nvim/CopilotChat.nvim",
-        opts = {
-          show_help = "yes",
-          prompts = {
-            Explain = "Explain how it works.",
-            Review = "Review the following code and provide concise suggestions.",
-            Tests = "Briefly explain how the selected code works, then generate unit tests.",
-            Refactor = "Refactor the code to improve clarity and readability.",
-          },
-        },
-        build = function()
-          vim.notify("Please update the remote plugins by running ':UpdateRemotePlugins', then restart Neovim.")
-        end,
-        event = "VeryLazy",
-      },
-
-      -- Avante setup (cursor-like LLM integration)
-      {
-        "yetone/avante.nvim",
-        event = "VeryLazy",
-        branch = "main",
-        build = "make",
-        opts = {
-          provider = "claude",
-          providers = {
-            claude = {
-              endpoint = "https://api.anthropic.com",
-              model = "claude-sonnet-4-20250514",
-              extra_request_body = {
-                temperature = 0,
-                max_tokens = 64000,
-              },
-            },
-          },
-        },
-        dependencies = {
-              "nvim-lua/plenary.nvim",
-              "stevearc/dressing.nvim",
-              "MunifTanjim/nui.nvim",
-              {
-                "HakonHarnes/img-clip.nvim",
-                event = "VeryLazy",
-                opts = {
-                  default = {
-                    embed_image_as_base64 = false,
-                    prompt_for_file_name = false,
-                    drag_and_drop = {
-                      insert_mode = true,
-                    },
-                    use_absolute_path = true,
-                  },
-                },
-              },
-              {
-                "MeanderingProgrammer/render-markdown.nvim",
-                opts = {
-                  file_types = {'Avante'},
-                },
-                ft = "Avante",
-              },
-        }
-      },
-
-      {
-         "olimorris/codecompanion.nvim",
-         event = "VeryLazy",
-         opts = {
-             strategies = {
-                chat = {
-                  adapter = "anthropic",
-                  slash_commands = {
-                    opts = {
-                        provider = "telescope"
-                    }
-                  }
-                },
-                inline = {
-                  adapter = "anthropic",
-                },
-             },
-             display = {
-                 action_palette = {
-                     provider = "telescope",
-                },
-            },
-         },
-         dependencies = {
-           "nvim-lua/plenary.nvim",
-           "nvim-treesitter/nvim-treesitter",
-            -- {
-            --   "MeanderingProgrammer/render-markdown.nvim",
-            --   opts = {
-            --     file_types = {'codecompanion'},
-            --   },
-            --   ft = "codecompanion",
-            -- },
-         },
-      },
-
-
-
       -- Debugging
       {
         "mfussenegger/nvim-dap",
@@ -710,7 +595,6 @@ require("lazy").setup({
             vim.api.nvim_set_keymap('n', '<leader>dv', ':lua require"osv".launch({port = 8086})<CR>', {noremap = true, silent = true})
         end
       },
-
       {
         "pwntester/octo.nvim",
         dependencies = {
@@ -793,7 +677,91 @@ require("lazy").setup({
           end
         end,
       },
-    },
+      {
+        "github/copilot.vim",
+        config = function()
+          vim.g.copilot_node_command = "~/.nodenv/versions/20.11.0/bin/node"
+          vim.g.copilot_no_tab_map = true
+          vim.cmd([[imap <expr> <Plug>(vimrc:copilot-dummy-map) copilot#Accept("\<Tab>")]])
+          vim.g.copilot_filetypes = {
+            ['dap-repl'] = false,
+          }
+        end,
+        cond = os.getenv("NO_GEN_AI_NEOVIM") ~= "1",
+      },
+      {
+        "ravitemer/mcphub.nvim",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+        },
+        build = "bundled_build.lua",  -- Bundles `mcp-hub` binary along with the neovim plugin
+        config = function()
+            require("mcphub").setup({
+              use_bundled_binary = true,  -- Use local `mcp-hub` binary
+            })
+        end,
+        cond = os.getenv("NO_GEN_AI_NEOVIM") ~= "1",
+      },
+      {
+        "olimorris/codecompanion.nvim",
+        event = "VeryLazy",
+        opts = {
+            strategies = {
+               chat = {
+                 adapter = "anthropic",
+                 slash_commands = {
+                   opts = {
+                       provider = "telescope"
+                   }
+                 }
+               },
+               inline = {
+                 adapter = "anthropic",
+               },
+            },
+            display = {
+                action_palette = {
+                    provider = "telescope",
+               },
+           },
+           extensions = {
+             mcphub = {
+               callback = "mcphub.extensions.codecompanion",
+               opts = {
+                 make_vars = true,
+                 make_slash_commands = true,
+                 show_result_in_chat = true
+               }
+             }
+           },
+        },
+        dependencies = {
+          "nvim-lua/plenary.nvim",
+          "nvim-treesitter/nvim-treesitter",
+          "ravitemer/mcphub.nvim",
+          {
+            "HakonHarnes/img-clip.nvim",
+            opts = {
+              filetypes = {
+                codecompanion = {
+                  prompt_for_file_name = false,
+                  template = "[Image]($FILE_PATH)",
+                  use_absolute_path = true,
+                },
+              },
+            },
+          },
+           -- {
+           --   "MeanderingProgrammer/render-markdown.nvim",
+           --   opts = {
+           --     file_types = {'codecompanion'},
+           --   },
+           --   ft = "codecompanion",
+           -- },
+        },
+        cond = os.getenv("NO_GEN_AI_NEOVIM") ~= "1",
+      },
+    }
 })
 
 -- Telescope config
@@ -809,10 +777,3 @@ require'nvim-treesitter.configs'.setup {
 
 vim.api.nvim_set_keymap('n', '<leader>cc', '<cmd>CodeCompanionChat Toggle<cr>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>ca', '<cmd>CodeCompanionActions<cr>', { noremap = true, silent = true })
-
--- Copilot Chat default keybindings
--- vim.api.nvim_set_keymap('n', '<leader>ccb', '<cmd>CopilotChatBuffer<cr>', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<leader>cce', '<cmd>CopilotChatExplain<cr>', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<leader>cct', '<cmd>CopilotChatTests<cr>', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('x', '<leader>ccv', ':CopilotChatVisual<cr>', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('x', '<leader>ccx', ':CopilotChatInPlace<cr>', { noremap = true, silent = true })
