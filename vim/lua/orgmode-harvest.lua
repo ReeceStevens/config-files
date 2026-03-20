@@ -267,7 +267,7 @@ end
 function HarvestClockReport:export_entry_to_harvest(entry)
     local project_id, task_id =  HarvestClockReport.determine_entry_project_and_task(entry)
     if project_id == nil or task_id == nil then
-        print("No project or task found for %s. Skipping.", entry.title)
+        print(string.format("No project or task found for %s. Skipping.", entry.title))
         return
     end
     local response = curl.post({
@@ -282,7 +282,12 @@ function HarvestClockReport:export_entry_to_harvest(entry)
             notes = entry.title:gsub("%[#[ABC]%] ", "")
         }
     })
-    print("Time entry successfully created for %s: %s to %s", entry.title, entry.start_time:to_string(), entry.end_time:to_string())
+    if response.status < 200 or response.status >= 300 then
+        local error_message = response.body or "Unknown error"
+        print(string.format("Failed to create time entry for %s (%s to %s): %s", entry.title, entry.start_time:to_string(), entry.end_time:to_string(), error_message))
+        return response
+    end
+    print(string.format("Time entry successfully created for %s: %s to %s", entry.title, entry.start_time:to_string(), entry.end_time:to_string()))
     return response
 end
 
