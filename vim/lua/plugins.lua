@@ -177,7 +177,6 @@ require("lazy").setup({
           {"folke/neodev.nvim", opts = { library = { plugins = { "nvim-dap-ui" }, types = true } } },
         },
         config = function()
-            local nvim_lsp = require('lspconfig')
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
             -- Use an on_attach function to only map the following keys
             -- after the language server attaches to the current buffer
@@ -225,15 +224,16 @@ require("lazy").setup({
             -- Use a loop to conveniently call 'setup' on multiple servers and
             -- map buffer local keybindings when the language server attaches
             -- local servers = { "pyright", "rust_analyzer", "tsserver" }
-            local servers = { "rust_analyzer", "svelte", "clangd", "ruff", "openscad_lsp", "neocmake" }
+            local servers = { "rust_analyzer", "svelte", "clangd", "ruff", "openscad_lsp", "neocmake", "tailwindcss" }
             for _, lsp in ipairs(servers) do
-              nvim_lsp[lsp].setup {
+              vim.lsp.config(lsp, {
                 on_attach = on_attach,
                 flags = {
                   debounce_text_changes = 150,
                 },
                 capabilities = capabilities,
-              }
+              })
+              vim.lsp.enable(lsp)
             end
 
             local function organize_imports()
@@ -253,7 +253,7 @@ require("lazy").setup({
             end
 
             -- Configure typescript server to use locally installed version
-            nvim_lsp.ts_ls.setup {
+            vim.lsp.config("ts_ls", {
                 on_attach = on_attach,
                 flags = {
                   debounce_text_changes = 150,
@@ -265,49 +265,55 @@ require("lazy").setup({
                   }
                 },
                 capabilities = capabilities,
-            }
+            })
+            vim.lsp.enable("ts_ls")
 
-            nvim_lsp.bashls.setup {
+            vim.lsp.config("bashls", {
                 on_attach = on_attach,
                 flags = {
                   debounce_text_changes = 150,
                 },
                 cmd = { "npx", "bash-language-server", "start" },
                 capabilities = capabilities,
-            }
+            })
+            vim.lsp.enable("bashls")
 
-            nvim_lsp.pylsp.setup {
+            vim.lsp.config("pylsp", {
                 on_attach = on_attach,
                 flags = {
                   debounce_text_changes = 150,
                 },
                 cmd = { "pylsp" },
                 capabilities = capabilities,
-            }
+            })
+            vim.lsp.enable("pylsp")
 
-            nvim_lsp.arduino_language_server.setup {
+            vim.lsp.config("arduino_language_server", {
                 cmd = {"arduino-language-server", "-cli-config", "/Users/reecestevens/.arduino15/arduino-cli.yaml", "-clangd", "/usr/bin/clangd", "-fqbn", "adafruit:nrf52:feather52840" },
                 on_attach = on_attach,
                 flags = {
                   debounce_text_changes = 150,
                 },
                 capabilities = capabilities,
-            }
+            })
+            vim.lsp.enable("arduino_language_server")
 
-            nvim_lsp.hls.setup {
+            vim.lsp.config("hls", {
                 on_attach = on_attach,
                 filetypes = {
                     'haskell', 'lhaskell', 'cabal'
                 },
                 capabilities = capabilities,
-            }
+            })
+            vim.lsp.enable("hls")
 
-            nvim_lsp.terraformls.setup{
+            vim.lsp.config("terraformls", {
                 on_attach = on_attach,
                 capabilities = capabilities,
-            }
+            })
+            vim.lsp.enable("terraformls")
 
-            nvim_lsp.lua_ls.setup({
+            vim.lsp.config("lua_ls", ({
               on_attach = on_attach,
               settings = {
                 Lua = {
@@ -317,14 +323,16 @@ require("lazy").setup({
                 }
               },
                 capabilities = capabilities,
-            })
+            }))
+            vim.lsp.enable("lua_ls")
 
             -- Disabling for now
-            -- nvim_lsp.omnisharp.setup {
+            -- vim.lsp.config("omnisharp", {
             --     cmd = { "dotnet", "/Users/reecestevens/bin/omnisharp-osx-arm64-net6.0/OmniSharp.dll" },
             --     on_attach = on_attach,
             --     capabilities = capabilities,
-            -- }
+            -- })
+            -- vim.lsp.enable("omnisharp")
 
             -- Allow hiding of diagnostic messages
             vim.g.diagnostics_visible = true
@@ -376,6 +384,7 @@ require("lazy").setup({
             document_color = {
                 kind = "background"
             },
+            server = { override = false },
         }
       },
 
