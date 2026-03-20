@@ -689,7 +689,7 @@ require("lazy").setup({
       {
         "github/copilot.vim",
         config = function()
-          vim.g.copilot_node_command = "~/.nodenv/versions/20.11.0/bin/node"
+          vim.g.copilot_node_command = "~/.nodenv/versions/22.11.0/bin/node"
           vim.g.copilot_no_tab_map = true
           vim.cmd([[imap <expr> <Plug>(vimrc:copilot-dummy-map) copilot#Accept("\<Tab>")]])
           vim.g.copilot_filetypes = {
