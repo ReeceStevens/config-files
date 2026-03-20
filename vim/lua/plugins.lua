@@ -737,7 +737,8 @@ require("lazy").setup({
              mcphub = {
                callback = "mcphub.extensions.codecompanion",
                opts = {
-                 make_vars = true,
+                 -- make_vars = true,
+                 make_vars = false, -- temporary workaround until https://github.com/ravitemer/mcphub.nvim/pull/279 is merged
                  make_slash_commands = true,
                  show_result_in_chat = true
                }
