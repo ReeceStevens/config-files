@@ -65,6 +65,12 @@ return {
                         fallback()
                     end,
                 }),
+                -- ["<Enter>"] = cmp.mapping({
+                --     c = function(fallback)
+                --         fallback()
+                --     end,
+                --     i = cmp.mapping.confirm({ select = true }),
+                -- }),
                 ['<C-g>'] = cmp.mapping(function()
                   vim.api.nvim_feedkeys(vim.fn['copilot#Accept'](
                       vim.api.nvim_replace_termcodes('<Tab>', true, true, true)
