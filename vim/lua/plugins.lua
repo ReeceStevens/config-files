@@ -173,7 +173,6 @@ require("lazy").setup({
       {
         "neovim/nvim-lspconfig",
         dependencies = {
-          "nvim-treesitter/nvim-treesitter",
           {"folke/neodev.nvim", opts = { library = { plugins = { "nvim-dap-ui" }, types = true } } },
         },
         config = function()
@@ -367,7 +366,9 @@ require("lazy").setup({
         "folke/snacks.nvim",
         opts = {
             bigfile = {},
-            image = {},
+            image = {
+                enabled = false,
+            },
         }
       },
 
@@ -376,7 +377,6 @@ require("lazy").setup({
         name = "tailwind-tools",
         build = ":UpdateRemotePlugins",
         dependencies = {
-          "nvim-treesitter/nvim-treesitter",
           "nvim-telescope/telescope.nvim",
           "neovim/nvim-lspconfig",
         },
@@ -747,7 +747,6 @@ require("lazy").setup({
         },
         dependencies = {
           "nvim-lua/plenary.nvim",
-          "nvim-treesitter/nvim-treesitter",
           "ravitemer/mcphub.nvim",
           {
             "HakonHarnes/img-clip.nvim",
@@ -771,19 +770,27 @@ require("lazy").setup({
         },
         cond = os.getenv("NO_GEN_AI_NEOVIM") ~= "1",
       },
+     {
+      "teamtype/teamtype-nvim",
+      keys = {
+        { "<leader>ej", "<cmd>TeamtypeJumpToCursor<cr>" },
+        { "<leader>ef", "<cmd>TeamtypeFollow<cr>" },
+      },
+      lazy = false,
     }
+   }
 })
 
 -- Telescope config
 -- require('telescope').load_extension('fzf')
 
 -- Treesitter config
-require'nvim-treesitter.configs'.setup {
-  highlight = {
-    enable = {'markdown'},
-    disable = { "c", "rust", "python", "tsx", "typescript", "yaml", "toml", "typescript.tsx", "typescriptreact", "gitcommit" },
-  },
-}
+-- require'nvim-treesitter.configs'.setup {
+--   highlight = {
+--     enable = {'markdown'},
+--     disable = { "c", "rust", "python", "tsx", "typescript", "yaml", "toml", "typescript.tsx", "typescriptreact", "gitcommit" },
+--   },
+-- }
 
 vim.api.nvim_set_keymap('n', '<leader>cc', '<cmd>CodeCompanionChat Toggle<cr>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>ca', '<cmd>CodeCompanionActions<cr>', { noremap = true, silent = true })
